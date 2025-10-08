@@ -1,0 +1,54 @@
+{
+  "name": "composer-slate",
+  "version": "0.1.0",
+  "description": "A WYSIWYG text editor library based on Slate.js",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "npm run demo:dev",
+    "build": "tsup",
+    "demo:dev": "vite demo",
+    "demo:build": "vite build demo",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "slate",
+    "editor",
+    "wysiwyg",
+    "rich-text",
+    "react"
+  ],
+  "author": "",
+  "license": "MIT",
+  "peerDependencies": {
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  },
+  "dependencies": {
+    "is-hotkey": "^0.2.0",
+    "slate": "^0.103.0",
+    "slate-history": "^0.109.0",
+    "slate-react": "^0.110.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.47",
+    "@types/react-dom": "^18.2.18",
+    "@vitejs/plugin-react": "^4.2.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "tsup": "^8.0.1",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.11"
+  }
+}
