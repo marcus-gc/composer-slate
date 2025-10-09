@@ -1,5 +1,4 @@
 import { RenderElementProps } from "slate-react";
-import React from "react";
 
 const HeadingOne = ({ attributes, children, element }: RenderElementProps) => {
     const style = { textAlign: (element as any).align }
@@ -19,8 +18,23 @@ const HeadingTwo = ({ attributes, children, element }: RenderElementProps) => {
     )
 }
 
-const Paragraph = ({ attributes, children, element }: RenderElementProps) => {
+const HeadingThree = ({ attributes, children, element }: RenderElementProps) => {
     const style = { textAlign: (element as any).align }
+    return (
+        <h3 style={style} {...attributes}>
+            {children}
+        </h3>
+    )
+}
+
+const Paragraph = ({ attributes, children, element }: RenderElementProps) => {
+    const el = element as any
+    const style = {
+        textAlign: el.align,
+        lineHeight: el.lineHeight,
+        fontFamily: el.font,
+        paddingLeft: el.indent ? `${el.indent * 24}px` : undefined,
+    }
     return (
         <p style={style} {...attributes}>
             {children}
@@ -72,4 +86,5 @@ export const elements = {
     'numbered-list': NumberedList,
     'heading-one': HeadingOne,
     'heading-two': HeadingTwo,
+    'heading-three': HeadingThree,
 }

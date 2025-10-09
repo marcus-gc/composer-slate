@@ -10,4 +10,7 @@ export const leaves = {
     'underline': ({ attributes, children }: RenderLeafProps) => {
         return <u {...attributes}>{children}</u>
     },
+    'strikethrough': ({ attributes, children }: RenderLeafProps) => {
+        return <s {...attributes}>{children}</s>
+    },
 };
