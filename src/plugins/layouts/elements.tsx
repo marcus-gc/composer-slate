@@ -18,7 +18,7 @@ const LayoutContainer = ({ attributes, children, element }: RenderElementProps) 
   )
 }
 
-const LayoutColumn = ({ attributes, children, element }: RenderElementProps) => {
+const LayoutColumn = ({ attributes, children }: RenderElementProps) => {
   const style = {
     minHeight: '50px',
     padding: '8px',

@@ -3,7 +3,11 @@ import { Editor as SlateEditor } from 'slate'
 
 export interface ComposerContextValue {
   editor: SlateEditor
-  plugins: Array<{ elements?: Record<string, any>; leaves?: Record<string, any> }>
+  plugins: Array<{
+    elements?: Record<string, any>
+    leaves?: Record<string, any>
+    utils?: Record<string, (editor: any) => (...args: any[]) => any>
+  }>
 
   // Formatting
   toggleMark: (format: string) => void
@@ -21,16 +25,8 @@ export interface ComposerContextValue {
   deleteBackward: (unit?: 'character' | 'word' | 'line' | 'block') => void
   deleteForward: (unit?: 'character' | 'word' | 'line' | 'block') => void
 
-  // Styling
-  setLineHeight: (lineHeight: string | undefined) => void
-  setFont: (font: string | undefined) => void
-  getLineHeight: () => string | undefined
-  getFont: () => string | undefined
-  increaseIndent: () => void
-  decreaseIndent: () => void
-
-  // Layouts
-  insertLayout: (columns?: number) => void
+  // Plugin utilities (dynamically added)
+  [key: string]: any
 }
 
 const ComposerContext = createContext<ComposerContextValue | null>(null)

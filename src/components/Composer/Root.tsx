@@ -14,18 +14,12 @@ import {
   deleteSelection,
   deleteBackward,
   deleteForward,
-  setLineHeight,
-  setFont,
-  getLineHeight,
-  getFont,
-  increaseIndent,
-  decreaseIndent,
-  insertLayout,
 } from '../../utils/editor-utils'
 
 export interface Plugin {
   elements?: Record<string, any>
   leaves?: Record<string, any>
+  utils?: Record<string, (editor: any) => (...args: any[]) => any>
 }
 
 export interface ComposerRootProps {
@@ -52,8 +46,18 @@ export const Root: React.FC<ComposerRootProps> = ({
 }) => {
   const editor = useMemo(() => withHistory(withReact(createEditor())), [])
 
-  const contextValue = useMemo(
-    () => ({
+  const contextValue = useMemo(() => {
+    // Merge all plugin utils into context
+    const pluginUtils = plugins.reduce((acc, plugin) => {
+      if (plugin.utils) {
+        Object.entries(plugin.utils).forEach(([name, utilFactory]) => {
+          acc[name] = utilFactory(editor) // Curry the editor in
+        })
+      }
+      return acc
+    }, {} as Record<string, any>)
+
+    return {
       editor,
       plugins,
       // Formatting
@@ -70,18 +74,10 @@ export const Root: React.FC<ComposerRootProps> = ({
       deleteSelection: () => deleteSelection(editor),
       deleteBackward: (unit?: 'character' | 'word' | 'line' | 'block') => deleteBackward(editor, unit),
       deleteForward: (unit?: 'character' | 'word' | 'line' | 'block') => deleteForward(editor, unit),
-      // Styling
-      setLineHeight: (lineHeight: string | undefined) => setLineHeight(editor, lineHeight),
-      setFont: (font: string | undefined) => setFont(editor, font),
-      getLineHeight: () => getLineHeight(editor),
-      getFont: () => getFont(editor),
-      increaseIndent: () => increaseIndent(editor),
-      decreaseIndent: () => decreaseIndent(editor),
-      // Layouts
-      insertLayout: (columns?: number) => insertLayout(editor, columns),
-    }),
-    [editor, plugins]
-  )
+      // Spread plugin utilities
+      ...pluginUtils,
+    }
+  }, [editor, plugins])
 
   return (
     <div className={className}>
