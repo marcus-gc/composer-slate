@@ -1,4 +1,6 @@
 export { Editor } from './components/Editor'
+export * as richText from './plugins/richText'
+
 export type {
   CustomEditor,
   CustomElement,

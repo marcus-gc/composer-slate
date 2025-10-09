@@ -62,12 +62,27 @@ const defaultInitialValue: Descendant[] = [
 
 export const Editor: React.FC<EditorProps> = ({
   initialValue = defaultInitialValue,
+  plugins = [],
   onChange,
   placeholder = 'Enter some rich text...',
   className = '',
 }) => {
-  const renderElement = useCallback((props: RenderElementProps) => <Element {...props} />, [])
-  const renderLeaf = useCallback((props: RenderLeafProps) => <Leaf {...props} />, [])
+  const availableElements = plugins.reduce((acc, plugin) => {
+    if (plugin.elements) {
+      return { ...acc, ...plugin.elements }
+    }
+    return acc
+  }, {} as Record<string, any>)
+
+  const availableLeaves = plugins.reduce((acc, plugin) => {
+    if (plugin.leaves) {
+      return { ...acc, ...plugin.leaves }
+    }
+    return acc
+  }, {} as Record<string, any>)
+
+  const renderElement = useCallback((props: RenderElementProps) => <Element availableElements={availableElements} {...props} />, [availableElements])
+  const renderLeaf = useCallback((props: RenderLeafProps) => <Leaf availableLeaves={availableLeaves} {...props} />, [availableLeaves])
   const editor = useMemo(() => withHistory(withReact(createEditor())), [])
 
   return (
@@ -75,7 +90,7 @@ export const Editor: React.FC<EditorProps> = ({
       <Slate
         editor={editor}
         initialValue={initialValue}
-        onChange={onChange || (() => {})}
+        onChange={onChange || (() => { })}
       >
         <Toolbar />
         <Editable

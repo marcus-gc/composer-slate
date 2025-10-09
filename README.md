@@ -30,6 +30,9 @@ function App() {
 
   return (
     <Editor
+      plugins={[
+          basicElements,
+      ]}
       onChange={(newValue) => {
         setValue(newValue)
       }}

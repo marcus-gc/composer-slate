@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Descendant } from 'slate'
-import { Editor } from '../../src'
+import { Editor, richText } from '../../src'
 
 function App() {
   const [value, setValue] = useState<Descendant[]>()
@@ -13,6 +13,7 @@ function App() {
       </p>
 
       <Editor
+        plugins={[richText]}
         onChange={(newValue) => {
           setValue(newValue)
           console.log('Editor value changed:', newValue)
