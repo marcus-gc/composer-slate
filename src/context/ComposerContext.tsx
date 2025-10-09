@@ -4,10 +4,22 @@ import { Editor as SlateEditor } from 'slate'
 export interface ComposerContextValue {
   editor: SlateEditor
   plugins: Array<{ elements?: Record<string, any>; leaves?: Record<string, any> }>
+
+  // Formatting
   toggleMark: (format: string) => void
   toggleBlock: (format: string) => void
   isMarkActive: (format: string) => boolean
   isBlockActive: (format: string, blockType?: 'type' | 'align') => boolean
+
+  // Insertion
+  insertBlock: (element: any) => void
+  insertInline: (element: any) => void
+  insertText: (text: string) => void
+
+  // Deletion
+  deleteSelection: () => void
+  deleteBackward: (unit?: 'character' | 'word' | 'line' | 'block') => void
+  deleteForward: (unit?: 'character' | 'word' | 'line' | 'block') => void
 }
 
 const ComposerContext = createContext<ComposerContextValue | null>(null)

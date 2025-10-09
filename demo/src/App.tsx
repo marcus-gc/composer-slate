@@ -4,7 +4,7 @@ import { Composer, useComposer, richText } from '../../src'
 
 // Advanced example: Custom toolbar using hooks
 function CustomToolbar() {
-  const { toggleMark, toggleBlock, isMarkActive, isBlockActive } = useComposer()
+  const { toggleMark, toggleBlock, isMarkActive, isBlockActive, insertBlock, insertText } = useComposer()
 
   const buttonStyle = (isActive: boolean): React.CSSProperties => ({
     padding: '8px 16px',
@@ -18,8 +18,19 @@ function CustomToolbar() {
     transition: 'all 0.2s',
   })
 
+  const actionButtonStyle: React.CSSProperties = {
+    padding: '8px 16px',
+    border: '2px solid #2196F3',
+    borderRadius: '6px',
+    background: '#E3F2FD',
+    cursor: 'pointer',
+    fontSize: '14px',
+    transition: 'all 0.2s',
+  }
+
   return (
     <div style={{ marginBottom: '12px', display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+      {/* Formatting buttons */}
       <button
         style={buttonStyle(isMarkActive('bold'))}
         onMouseDown={(e) => {
@@ -46,6 +57,47 @@ function CustomToolbar() {
         }}
       >
         Heading 1
+      </button>
+
+      {/* Separator */}
+      <div style={{ width: '1px', background: '#ddd', margin: '0 4px' }} />
+
+      {/* Insertion buttons */}
+      <button
+        style={actionButtonStyle}
+        onMouseDown={(e) => {
+          e.preventDefault()
+          insertText('Hello World! ')
+        }}
+        title="Insert text"
+      >
+        Insert Text
+      </button>
+      <button
+        style={actionButtonStyle}
+        onMouseDown={(e) => {
+          e.preventDefault()
+          insertBlock({
+            type: 'block-quote',
+            children: [{ text: 'This is an inserted quote block!' }],
+          })
+        }}
+        title="Insert quote block"
+      >
+        Insert Quote
+      </button>
+      <button
+        style={actionButtonStyle}
+        onMouseDown={(e) => {
+          e.preventDefault()
+          insertBlock({
+            type: 'paragraph',
+            children: [{ text: '' }],
+          })
+        }}
+        title="Insert paragraph"
+      >
+        New Paragraph
       </button>
     </div>
   )

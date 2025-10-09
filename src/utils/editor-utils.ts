@@ -70,3 +70,56 @@ export const isMarkActive = (editor: SlateEditor, format: string) => {
   const marks = SlateEditor.marks(editor) as Record<string, any> | null
   return marks ? marks[format] === true : false
 }
+
+/**
+ * Insert a block element at the current selection
+ * @param editor - The Slate editor instance
+ * @param element - The block element to insert (e.g., { type: 'paragraph', children: [{ text: 'Hello' }] })
+ */
+export const insertBlock = (editor: SlateEditor, element: any) => {
+  Transforms.insertNodes(editor, element)
+}
+
+/**
+ * Insert an inline element at the current selection
+ * @param editor - The Slate editor instance
+ * @param element - The inline element to insert
+ */
+export const insertInline = (editor: SlateEditor, element: any) => {
+  Transforms.insertNodes(editor, element, { mode: 'highest' })
+}
+
+/**
+ * Insert text at the current selection
+ * @param editor - The Slate editor instance
+ * @param text - The text to insert
+ */
+export const insertText = (editor: SlateEditor, text: string) => {
+  Transforms.insertText(editor, text)
+}
+
+/**
+ * Delete the current selection or character
+ * @param editor - The Slate editor instance
+ */
+export const deleteSelection = (editor: SlateEditor) => {
+  Transforms.delete(editor)
+}
+
+/**
+ * Delete backward (backspace)
+ * @param editor - The Slate editor instance
+ * @param unit - Unit to delete ('character', 'word', 'line', 'block')
+ */
+export const deleteBackward = (editor: SlateEditor, unit: 'character' | 'word' | 'line' | 'block' = 'character') => {
+  Transforms.delete(editor, { unit, reverse: true })
+}
+
+/**
+ * Delete forward (delete key)
+ * @param editor - The Slate editor instance
+ * @param unit - Unit to delete ('character', 'word', 'line', 'block')
+ */
+export const deleteForward = (editor: SlateEditor, unit: 'character' | 'word' | 'line' | 'block' = 'character') => {
+  Transforms.delete(editor, { unit })
+}

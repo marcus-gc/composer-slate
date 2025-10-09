@@ -3,7 +3,18 @@ import { createEditor, Descendant } from 'slate'
 import { Slate, withReact } from 'slate-react'
 import { withHistory } from 'slate-history'
 import { ComposerProvider } from '../../context/ComposerContext'
-import { toggleMark, toggleBlock, isMarkActive, isBlockActive } from '../../utils/editor-utils'
+import {
+  toggleMark,
+  toggleBlock,
+  isMarkActive,
+  isBlockActive,
+  insertBlock,
+  insertInline,
+  insertText,
+  deleteSelection,
+  deleteBackward,
+  deleteForward,
+} from '../../utils/editor-utils'
 
 export interface Plugin {
   elements?: Record<string, any>
@@ -38,13 +49,22 @@ export const Root: React.FC<ComposerRootProps> = ({
     () => ({
       editor,
       plugins,
+      // Formatting
       toggleMark: (format: string) => toggleMark(editor, format),
       toggleBlock: (format: string) => toggleBlock(editor, format),
       isMarkActive: (format: string) => isMarkActive(editor, format),
       isBlockActive: (format: string, blockType: 'type' | 'align' = 'type') =>
         isBlockActive(editor, format, blockType),
+      // Insertion
+      insertBlock: (element: any) => insertBlock(editor, element),
+      insertInline: (element: any) => insertInline(editor, element),
+      insertText: (text: string) => insertText(editor, text),
+      // Deletion
+      deleteSelection: () => deleteSelection(editor),
+      deleteBackward: (unit?: 'character' | 'word' | 'line' | 'block') => deleteBackward(editor, unit),
+      deleteForward: (unit?: 'character' | 'word' | 'line' | 'block') => deleteForward(editor, unit),
     }),
-    [editor]
+    [editor, plugins]
   )
 
   return (
