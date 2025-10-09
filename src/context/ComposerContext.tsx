@@ -7,6 +7,7 @@ export interface ComposerContextValue {
     elements?: Record<string, any>
     leaves?: Record<string, any>
     utils?: Record<string, (editor: any) => (...args: any[]) => any>
+    withPlugin?: (editor: any) => any
   }>
 
   // Formatting

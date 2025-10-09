@@ -78,6 +78,19 @@ const NumberedList = ({ attributes, children, element }: RenderElementProps) => 
     )
 }
 
+const Link = ({ attributes, children, element }: RenderElementProps) => {
+    const el = element as any
+    return (
+        <a
+            {...attributes}
+            href={el.url}
+            style={{ color: '#0066cc', textDecoration: 'underline' }}
+        >
+            {children}
+        </a>
+    )
+}
+
 export const elements = {
     'paragraph': Paragraph,
     'block-quote': BlockQuote,
@@ -87,4 +100,5 @@ export const elements = {
     'heading-one': HeadingOne,
     'heading-two': HeadingTwo,
     'heading-three': HeadingThree,
+    'link': Link,
 }

@@ -21,6 +21,7 @@ export type {
   ListItemElement,
   LayoutContainerElement,
   LayoutColumnElement,
+  LinkElement,
   FormattedText,
 } from './types'
 

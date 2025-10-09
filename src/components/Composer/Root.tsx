@@ -20,6 +20,7 @@ export interface Plugin {
   elements?: Record<string, any>
   leaves?: Record<string, any>
   utils?: Record<string, (editor: any) => (...args: any[]) => any>
+  withPlugin?: (editor: any) => any
 }
 
 export interface ComposerRootProps {
@@ -44,7 +45,18 @@ export const Root: React.FC<ComposerRootProps> = ({
   plugins = [],
   className = '',
 }) => {
-  const editor = useMemo(() => withHistory(withReact(createEditor())), [])
+  const editor = useMemo(() => {
+    let ed = withHistory(withReact(createEditor()))
+
+    // Apply plugin editor enhancements
+    plugins.forEach((plugin) => {
+      if (plugin.withPlugin) {
+        ed = plugin.withPlugin(ed)
+      }
+    })
+
+    return ed
+  }, []) // Empty deps - editor should only be created once
 
   const contextValue = useMemo(() => {
     // Merge all plugin utils into context
