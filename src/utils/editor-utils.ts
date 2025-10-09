@@ -27,14 +27,14 @@ export const toggleBlock = (editor: SlateEditor, format: string) => {
     }
   } else {
     newProperties = {
-      type: isActive ? 'paragraph' : isList ? 'list-item' : format,
+      type: isActive ? 'paragraph' : isList ? 'list-item' : (format as any),
     }
   }
 
   Transforms.setNodes<SlateElement>(editor, newProperties)
 
   if (!isActive && isList) {
-    const block = { type: format, children: [] }
+    const block = { type: format, children: [] } as any
     Transforms.wrapNodes(editor, block)
   }
 }

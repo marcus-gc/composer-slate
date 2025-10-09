@@ -1,5 +1,4 @@
 import { RenderElementProps } from "slate-react";
-import React from "react";
 
 const HeadingOne = ({ attributes, children, element }: RenderElementProps) => {
     const style = { textAlign: (element as any).align }

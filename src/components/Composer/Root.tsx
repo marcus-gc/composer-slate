@@ -1,0 +1,57 @@
+import React, { useMemo } from 'react'
+import { createEditor, Descendant } from 'slate'
+import { Slate, withReact } from 'slate-react'
+import { withHistory } from 'slate-history'
+import { ComposerProvider } from '../../context/ComposerContext'
+import { toggleMark, toggleBlock, isMarkActive, isBlockActive } from '../../utils/editor-utils'
+
+export interface Plugin {
+  elements?: Record<string, any>
+  leaves?: Record<string, any>
+}
+
+export interface ComposerRootProps {
+  children: React.ReactNode
+  initialValue?: Descendant[]
+  onChange?: (value: Descendant[]) => void
+  plugins?: Plugin[]
+  className?: string
+}
+
+const defaultInitialValue: Descendant[] = [
+  {
+    type: 'paragraph',
+    children: [{ text: '' }],
+  },
+]
+
+export const Root: React.FC<ComposerRootProps> = ({
+  children,
+  initialValue = defaultInitialValue,
+  onChange,
+  plugins = [],
+  className = '',
+}) => {
+  const editor = useMemo(() => withHistory(withReact(createEditor())), [])
+
+  const contextValue = useMemo(
+    () => ({
+      editor,
+      plugins,
+      toggleMark: (format: string) => toggleMark(editor, format),
+      toggleBlock: (format: string) => toggleBlock(editor, format),
+      isMarkActive: (format: string) => isMarkActive(editor, format),
+      isBlockActive: (format: string, blockType: 'type' | 'align' = 'type') =>
+        isBlockActive(editor, format, blockType),
+    }),
+    [editor]
+  )
+
+  return (
+    <div className={className}>
+      <Slate editor={editor} initialValue={initialValue} onChange={onChange || (() => {})}>
+        <ComposerProvider value={contextValue}>{children}</ComposerProvider>
+      </Slate>
+    </div>
+  )
+}
