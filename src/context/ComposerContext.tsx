@@ -28,6 +28,9 @@ export interface ComposerContextValue {
   getFont: () => string | undefined
   increaseIndent: () => void
   decreaseIndent: () => void
+
+  // Layouts
+  insertLayout: (columns?: number) => void
 }
 
 const ComposerContext = createContext<ComposerContextValue | null>(null)

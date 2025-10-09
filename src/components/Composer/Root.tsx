@@ -20,6 +20,7 @@ import {
   getFont,
   increaseIndent,
   decreaseIndent,
+  insertLayout,
 } from '../../utils/editor-utils'
 
 export interface Plugin {
@@ -76,6 +77,8 @@ export const Root: React.FC<ComposerRootProps> = ({
       getFont: () => getFont(editor),
       increaseIndent: () => increaseIndent(editor),
       decreaseIndent: () => decreaseIndent(editor),
+      // Layouts
+      insertLayout: (columns?: number) => insertLayout(editor, columns),
     }),
     [editor, plugins]
   )
