@@ -12,6 +12,15 @@ export const insertImage = (editor: SlateEditor) => (url: string, alt?: string) 
   } as any
 
   Transforms.insertNodes(editor, image)
+
+  // Insert a new paragraph after the image and move cursor there
+  const newParagraph = {
+    type: 'paragraph',
+    children: [{ text: '' }],
+  } as any
+
+  Transforms.insertNodes(editor, newParagraph)
+  Transforms.move(editor)
 }
 
 export const utils = {
