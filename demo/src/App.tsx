@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { Descendant } from 'slate'
-import { Composer, useComposer, richText, layouts } from '../../src'
+import { Composer, useComposer, richText, layouts, images } from '../../src'
 
 // Advanced example: Custom toolbar using hooks
 function CustomToolbar() {
-  const { toggleMark, toggleBlock, isMarkActive, isBlockActive, insertBlock, insertText, insertLayout } = useComposer()
+  const { toggleMark, toggleBlock, isMarkActive, isBlockActive, insertBlock, insertText, insertLayout, insertImage } = useComposer()
 
   const buttonStyle = (isActive: boolean): React.CSSProperties => ({
     padding: '8px 16px',
@@ -119,6 +119,19 @@ function CustomToolbar() {
       >
         3 Columns
       </button>
+      <button
+        style={actionButtonStyle}
+        onMouseDown={(e) => {
+          e.preventDefault()
+          const url = prompt('Enter image URL:')
+          if (url) {
+            insertImage(url)
+          }
+        }}
+        title="Insert image"
+      >
+        Insert Image
+      </button>
     </div>
   )
 }
@@ -146,14 +159,14 @@ function App() {
           }}
         >
           <Composer.Root
-            plugins={[richText, layouts]}
+            plugins={[richText, layouts, images]}
             onChange={(newValue) => {
               setSimpleValue(newValue)
               console.log('Simple editor changed:', newValue)
             }}
           >
             <Composer.DefaultToolbar />
-            <Composer.Content plugins={[richText, layouts]} />
+            <Composer.Content plugins={[richText, layouts, images]} />
           </Composer.Root>
         </div>
       </section>
@@ -170,7 +183,7 @@ function App() {
           }}
         >
           <Composer.Root
-            plugins={[richText, layouts]}
+            plugins={[richText, layouts, images]}
             onChange={(newValue) => {
               setAdvancedValue(newValue)
               console.log('Advanced editor changed:', newValue)
@@ -180,7 +193,7 @@ function App() {
               <CustomToolbar />
             </Composer.Toolbar>
             <Composer.Content
-              plugins={[richText, layouts]}
+              plugins={[richText, layouts, images]}
               placeholder="Type something amazing..."
               style={{
                 minHeight: '150px',

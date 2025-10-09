@@ -5,6 +5,7 @@ export { useComposer } from './context/ComposerContext'
 // Plugins
 export * as richText from './plugins/richText'
 export * as layouts from './plugins/layouts'
+export * as images from './plugins/images'
 
 // Types
 export type {
@@ -22,6 +23,7 @@ export type {
   LayoutContainerElement,
   LayoutColumnElement,
   LinkElement,
+  ImageElement,
   FormattedText,
 } from './types'
 

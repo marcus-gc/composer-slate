@@ -71,6 +71,17 @@ export type LinkElement = {
   children: CustomText[]
 }
 
+export type ImageElement = {
+  type: 'image'
+  url: string
+  alt?: string
+  children: EmptyText[]
+}
+
+export type EmptyText = {
+  text: ''
+}
+
 export type CustomElement =
   | ParagraphElement
   | HeadingOneElement
@@ -83,6 +94,7 @@ export type CustomElement =
   | LayoutContainerElement
   | LayoutColumnElement
   | LinkElement
+  | ImageElement
 
 export type FormattedText = {
   text: string

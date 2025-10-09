@@ -25,7 +25,7 @@ export const insertLayout = (editor: SlateEditor) => (columns: number = 2) => {
   Transforms.insertNodes(editor, {
     type: 'paragraph',
     children: [{ text: '' }],
-  } as any)
+  } as any, { at: [editor.children.length] })
 }
 
 export const utils = {
