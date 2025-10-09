@@ -65,6 +65,12 @@ export type LayoutColumnElement = {
   children: CustomElement[] | CustomText[]
 }
 
+export type LinkElement = {
+  type: 'link'
+  url: string
+  children: CustomText[]
+}
+
 export type CustomElement =
   | ParagraphElement
   | HeadingOneElement
@@ -76,6 +82,7 @@ export type CustomElement =
   | ListItemElement
   | LayoutContainerElement
   | LayoutColumnElement
+  | LinkElement
 
 export type FormattedText = {
   text: string

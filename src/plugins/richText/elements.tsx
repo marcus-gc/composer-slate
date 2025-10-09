@@ -78,13 +78,46 @@ const NumberedList = ({ attributes, children, element }: RenderElementProps) => 
     )
 }
 
+const Link = ({ attributes, children, element }: RenderElementProps) => {
+    const el = element as any
+    return (
+        <a
+            {...attributes}
+            href={el.url}
+            style={{ color: '#0066cc', textDecoration: 'underline' }}
+        >
+            {children}
+        </a>
+    )
+}
+
 export const elements = {
-    'paragraph': Paragraph,
-    'block-quote': BlockQuote,
-    'bulleted-list': BulletedList,
-    'list-item': ListItem,
-    'numbered-list': NumberedList,
-    'heading-one': HeadingOne,
-    'heading-two': HeadingTwo,
-    'heading-three': HeadingThree,
+    'paragraph': {
+        component: Paragraph,
+    },
+    'block-quote': {
+        component: BlockQuote,
+    },
+    'bulleted-list': {
+        component: BulletedList,
+    },
+    'list-item': {
+        component: ListItem,
+    },
+    'numbered-list': {
+        component: NumberedList,
+    },
+    'heading-one': {
+        component: HeadingOne,
+    },
+    'heading-two': {
+        component: HeadingTwo,
+    },
+    'heading-three': {
+        component: HeadingThree,
+    },
+    'link': {
+        component: Link,
+        inline: true,
+    },
 }

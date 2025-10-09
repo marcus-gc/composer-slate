@@ -39,11 +39,15 @@ export const DefaultToolbar: React.FC<DefaultToolbarProps> = ({ className = '', 
     setFont,
     getLineHeight,
     getFont,
+    insertLink,
+    removeLink,
+    isLinkActive,
   } = useComposer()
 
   // These will now update when selection changes because useSlate() triggers re-renders
-  const currentLineHeight = getLineHeight()
-  const currentFont = getFont()
+  const currentLineHeight = getLineHeight?.()
+  const currentFont = getFont?.()
+  const linkActive = isLinkActive?.()
 
   const handleMouseDown = (e: React.MouseEvent, action: () => void) => {
     e.preventDefault()
@@ -87,6 +91,25 @@ export const DefaultToolbar: React.FC<DefaultToolbarProps> = ({ className = '', 
         title="Code (Cmd+`)"
       >
         {'<>'}
+      </button>
+
+      {/* Link button */}
+      <button
+        style={buttonStyle(linkActive || false)}
+        onMouseDown={(e) => {
+          e.preventDefault()
+          if (linkActive) {
+            removeLink?.()
+          } else {
+            const url = window.prompt('Enter the URL:')
+            if (url) {
+              insertLink?.(url)
+            }
+          }
+        }}
+        title={linkActive ? 'Remove Link' : 'Insert Link'}
+      >
+        🔗
       </button>
 
       {/* Block buttons */}

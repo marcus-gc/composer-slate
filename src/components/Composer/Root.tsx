@@ -17,7 +17,11 @@ import {
 } from '../../utils/editor-utils'
 
 export interface Plugin {
-  elements?: Record<string, any>
+  elements?: Record<string, {
+    component: any
+    inline?: boolean
+    void?: boolean
+  }>
   leaves?: Record<string, any>
   utils?: Record<string, (editor: any) => (...args: any[]) => any>
 }
@@ -44,7 +48,40 @@ export const Root: React.FC<ComposerRootProps> = ({
   plugins = [],
   className = '',
 }) => {
-  const editor = useMemo(() => withHistory(withReact(createEditor())), [])
+  const editor = useMemo(() => {
+    let ed = withHistory(withReact(createEditor()))
+
+    // Auto-detect inline and void elements from plugin metadata
+    const inlineTypes = new Set<string>()
+    const voidTypes = new Set<string>()
+
+    plugins.forEach((plugin) => {
+      if (plugin.elements) {
+        Object.entries(plugin.elements).forEach(([type, config]) => {
+          if (config.inline) inlineTypes.add(type)
+          if (config.void) voidTypes.add(type)
+        })
+      }
+    })
+
+    // Override isInline if we have inline elements
+    if (inlineTypes.size > 0) {
+      const { isInline } = ed
+      ed.isInline = (element) => {
+        return inlineTypes.has((element as any).type) || isInline(element)
+      }
+    }
+
+    // Override isVoid if we have void elements
+    if (voidTypes.size > 0) {
+      const { isVoid } = ed
+      ed.isVoid = (element) => {
+        return voidTypes.has((element as any).type) || isVoid(element)
+      }
+    }
+
+    return ed
+  }, []) // Empty deps - editor should only be created once
 
   const contextValue = useMemo(() => {
     // Merge all plugin utils into context
