@@ -20,6 +20,12 @@ export interface ComposerContextValue {
   deleteSelection: () => void
   deleteBackward: (unit?: 'character' | 'word' | 'line' | 'block') => void
   deleteForward: (unit?: 'character' | 'word' | 'line' | 'block') => void
+
+  // Styling
+  setLineHeight: (lineHeight: string | undefined) => void
+  setFont: (font: string | undefined) => void
+  increaseIndent: () => void
+  decreaseIndent: () => void
 }
 
 const ComposerContext = createContext<ComposerContextValue | null>(null)

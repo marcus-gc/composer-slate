@@ -123,3 +123,83 @@ export const deleteBackward = (editor: SlateEditor, unit: 'character' | 'word' |
 export const deleteForward = (editor: SlateEditor, unit: 'character' | 'word' | 'line' | 'block' = 'character') => {
   Transforms.delete(editor, { unit })
 }
+
+/**
+ * Set line height for the current block
+ * @param editor - The Slate editor instance
+ * @param lineHeight - Line height value (e.g., '1.5', '2', '1.2')
+ */
+export const setLineHeight = (editor: SlateEditor, lineHeight: string | undefined) => {
+  Transforms.setNodes<SlateElement>(editor, { lineHeight } as any, {
+    match: (n) => !SlateEditor.isEditor(n) && SlateElement.isElement(n),
+  })
+}
+
+/**
+ * Set font family for the current block
+ * @param editor - The Slate editor instance
+ * @param font - Font family name (e.g., 'Arial', 'Times New Roman', 'monospace')
+ */
+export const setFont = (editor: SlateEditor, font: string | undefined) => {
+  Transforms.setNodes<SlateElement>(editor, { font } as any, {
+    match: (n) => !SlateEditor.isEditor(n) && SlateElement.isElement(n),
+  })
+}
+
+/**
+ * Increase indentation of the current block
+ * @param editor - The Slate editor instance
+ */
+export const increaseIndent = (editor: SlateEditor) => {
+  const { selection } = editor
+  if (!selection) return
+
+  const [match] = Array.from(
+    SlateEditor.nodes(editor, {
+      at: selection,
+      match: (n) => !SlateEditor.isEditor(n) && SlateElement.isElement(n),
+    })
+  )
+
+  if (match) {
+    const [node] = match
+    const currentIndent = (node as any).indent || 0
+    Transforms.setNodes<SlateElement>(
+      editor,
+      { indent: currentIndent + 1 } as any,
+      {
+        match: (n) => !SlateEditor.isEditor(n) && SlateElement.isElement(n),
+      }
+    )
+  }
+}
+
+/**
+ * Decrease indentation of the current block
+ * @param editor - The Slate editor instance
+ */
+export const decreaseIndent = (editor: SlateEditor) => {
+  const { selection } = editor
+  if (!selection) return
+
+  const [match] = Array.from(
+    SlateEditor.nodes(editor, {
+      at: selection,
+      match: (n) => !SlateEditor.isEditor(n) && SlateElement.isElement(n),
+    })
+  )
+
+  if (match) {
+    const [node] = match
+    const currentIndent = (node as any).indent || 0
+    if (currentIndent > 0) {
+      Transforms.setNodes<SlateElement>(
+        editor,
+        { indent: currentIndent - 1 } as any,
+        {
+          match: (n) => !SlateEditor.isEditor(n) && SlateElement.isElement(n),
+        }
+      )
+    }
+  }
+}

@@ -24,7 +24,7 @@ const buttonStyle = (isActive: boolean): React.CSSProperties => ({
 })
 
 export const DefaultToolbar: React.FC<DefaultToolbarProps> = ({ className = '', style }) => {
-  const { toggleMark, toggleBlock, isMarkActive, isBlockActive } = useComposer()
+  const { toggleMark, toggleBlock, isMarkActive, isBlockActive, increaseIndent, decreaseIndent } = useComposer()
 
   const handleMouseDown = (e: React.MouseEvent, action: () => void) => {
     e.preventDefault()
@@ -56,6 +56,13 @@ export const DefaultToolbar: React.FC<DefaultToolbarProps> = ({ className = '', 
         U
       </button>
       <button
+        style={buttonStyle(isMarkActive('strikethrough'))}
+        onMouseDown={(e) => handleMouseDown(e, () => toggleMark('strikethrough'))}
+        title="Strikethrough"
+      >
+        S
+      </button>
+      <button
         style={buttonStyle(isMarkActive('code'))}
         onMouseDown={(e) => handleMouseDown(e, () => toggleMark('code'))}
         title="Code (Cmd+`)"
@@ -77,6 +84,13 @@ export const DefaultToolbar: React.FC<DefaultToolbarProps> = ({ className = '', 
         title="Heading 2"
       >
         H2
+      </button>
+      <button
+        style={buttonStyle(isBlockActive('heading-three'))}
+        onMouseDown={(e) => handleMouseDown(e, () => toggleBlock('heading-three'))}
+        title="Heading 3"
+      >
+        H3
       </button>
       <button
         style={buttonStyle(isBlockActive('block-quote'))}
@@ -121,6 +135,22 @@ export const DefaultToolbar: React.FC<DefaultToolbarProps> = ({ className = '', 
         title="Align Right"
       >
         ⇥
+      </button>
+
+      {/* Indentation buttons */}
+      <button
+        style={buttonStyle(false)}
+        onMouseDown={(e) => handleMouseDown(e, () => decreaseIndent())}
+        title="Decrease Indent"
+      >
+        ◁
+      </button>
+      <button
+        style={buttonStyle(false)}
+        onMouseDown={(e) => handleMouseDown(e, () => increaseIndent())}
+        title="Increase Indent"
+      >
+        ▷
       </button>
     </div>
   )

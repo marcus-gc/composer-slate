@@ -7,6 +7,9 @@ export type CustomEditor = BaseEditor & ReactEditor & HistoryEditor
 export type ParagraphElement = {
   type: 'paragraph'
   align?: string
+  lineHeight?: string
+  font?: string
+  indent?: number
   children: CustomText[]
 }
 
@@ -18,6 +21,12 @@ export type HeadingOneElement = {
 
 export type HeadingTwoElement = {
   type: 'heading-two'
+  align?: string
+  children: CustomText[]
+}
+
+export type HeadingThreeElement = {
+  type: 'heading-three'
   align?: string
   children: CustomText[]
 }
@@ -49,6 +58,7 @@ export type CustomElement =
   | ParagraphElement
   | HeadingOneElement
   | HeadingTwoElement
+  | HeadingThreeElement
   | BlockQuoteElement
   | BulletedListElement
   | NumberedListElement
@@ -59,6 +69,7 @@ export type FormattedText = {
   bold?: boolean
   italic?: boolean
   underline?: boolean
+  strikethrough?: boolean
   code?: boolean
 }
 

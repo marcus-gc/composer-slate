@@ -13,6 +13,7 @@ export type {
   ParagraphElement,
   HeadingOneElement,
   HeadingTwoElement,
+  HeadingThreeElement,
   BlockQuoteElement,
   BulletedListElement,
   NumberedListElement,

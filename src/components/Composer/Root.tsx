@@ -14,6 +14,10 @@ import {
   deleteSelection,
   deleteBackward,
   deleteForward,
+  setLineHeight,
+  setFont,
+  increaseIndent,
+  decreaseIndent,
 } from '../../utils/editor-utils'
 
 export interface Plugin {
@@ -63,6 +67,11 @@ export const Root: React.FC<ComposerRootProps> = ({
       deleteSelection: () => deleteSelection(editor),
       deleteBackward: (unit?: 'character' | 'word' | 'line' | 'block') => deleteBackward(editor, unit),
       deleteForward: (unit?: 'character' | 'word' | 'line' | 'block') => deleteForward(editor, unit),
+      // Styling
+      setLineHeight: (lineHeight: string | undefined) => setLineHeight(editor, lineHeight),
+      setFont: (font: string | undefined) => setFont(editor, font),
+      increaseIndent: () => increaseIndent(editor),
+      decreaseIndent: () => decreaseIndent(editor),
     }),
     [editor, plugins]
   )
