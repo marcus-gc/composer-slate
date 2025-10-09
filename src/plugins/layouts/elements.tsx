@@ -34,6 +34,10 @@ const LayoutColumn = ({ attributes, children }: RenderElementProps) => {
 }
 
 export const elements = {
-  'layout-container': LayoutContainer,
-  'layout-column': LayoutColumn,
+  'layout-container': {
+    component: LayoutContainer,
+  },
+  'layout-column': {
+    component: LayoutColumn,
+  },
 }

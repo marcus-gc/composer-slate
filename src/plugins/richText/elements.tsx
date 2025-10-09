@@ -92,13 +92,32 @@ const Link = ({ attributes, children, element }: RenderElementProps) => {
 }
 
 export const elements = {
-    'paragraph': Paragraph,
-    'block-quote': BlockQuote,
-    'bulleted-list': BulletedList,
-    'list-item': ListItem,
-    'numbered-list': NumberedList,
-    'heading-one': HeadingOne,
-    'heading-two': HeadingTwo,
-    'heading-three': HeadingThree,
-    'link': Link,
+    'paragraph': {
+        component: Paragraph,
+    },
+    'block-quote': {
+        component: BlockQuote,
+    },
+    'bulleted-list': {
+        component: BulletedList,
+    },
+    'list-item': {
+        component: ListItem,
+    },
+    'numbered-list': {
+        component: NumberedList,
+    },
+    'heading-one': {
+        component: HeadingOne,
+    },
+    'heading-two': {
+        component: HeadingTwo,
+    },
+    'heading-three': {
+        component: HeadingThree,
+    },
+    'link': {
+        component: Link,
+        inline: true,
+    },
 }

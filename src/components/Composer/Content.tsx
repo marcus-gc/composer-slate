@@ -13,7 +13,10 @@ export interface ComposerContentProps {
   spellCheck?: boolean
   autoFocus?: boolean
   readOnly?: boolean
-  plugins?: Array<{ elements?: Record<string, any>; leaves?: Record<string, any> }>
+  plugins?: Array<{
+    elements?: Record<string, { component: any; inline?: boolean; void?: boolean }>
+    leaves?: Record<string, any>
+  }>
 }
 
 const HOTKEYS: Record<string, string> = {
