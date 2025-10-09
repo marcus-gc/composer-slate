@@ -16,6 +16,8 @@ import {
   deleteForward,
   setLineHeight,
   setFont,
+  getLineHeight,
+  getFont,
   increaseIndent,
   decreaseIndent,
 } from '../../utils/editor-utils'
@@ -70,6 +72,8 @@ export const Root: React.FC<ComposerRootProps> = ({
       // Styling
       setLineHeight: (lineHeight: string | undefined) => setLineHeight(editor, lineHeight),
       setFont: (font: string | undefined) => setFont(editor, font),
+      getLineHeight: () => getLineHeight(editor),
+      getFont: () => getFont(editor),
       increaseIndent: () => increaseIndent(editor),
       decreaseIndent: () => decreaseIndent(editor),
     }),

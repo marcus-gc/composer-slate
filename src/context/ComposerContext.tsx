@@ -24,6 +24,8 @@ export interface ComposerContextValue {
   // Styling
   setLineHeight: (lineHeight: string | undefined) => void
   setFont: (font: string | undefined) => void
+  getLineHeight: () => string | undefined
+  getFont: () => string | undefined
   increaseIndent: () => void
   decreaseIndent: () => void
 }

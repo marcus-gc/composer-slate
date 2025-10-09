@@ -1,4 +1,5 @@
 import React from 'react'
+import { useSlate } from 'slate-react'
 import { useComposer } from '../../context/ComposerContext'
 
 export interface DefaultToolbarProps {
@@ -24,7 +25,25 @@ const buttonStyle = (isActive: boolean): React.CSSProperties => ({
 })
 
 export const DefaultToolbar: React.FC<DefaultToolbarProps> = ({ className = '', style }) => {
-  const { toggleMark, toggleBlock, isMarkActive, isBlockActive, increaseIndent, decreaseIndent } = useComposer()
+  // useSlate triggers re-renders on selection changes
+  useSlate()
+
+  const {
+    toggleMark,
+    toggleBlock,
+    isMarkActive,
+    isBlockActive,
+    increaseIndent,
+    decreaseIndent,
+    setLineHeight,
+    setFont,
+    getLineHeight,
+    getFont,
+  } = useComposer()
+
+  // These will now update when selection changes because useSlate() triggers re-renders
+  const currentLineHeight = getLineHeight()
+  const currentFont = getFont()
 
   const handleMouseDown = (e: React.MouseEvent, action: () => void) => {
     e.preventDefault()
@@ -152,6 +171,58 @@ export const DefaultToolbar: React.FC<DefaultToolbarProps> = ({ className = '', 
       >
         ▷
       </button>
+
+      {/* Line Height Select */}
+      <select
+        value={currentLineHeight || 'default'}
+        onChange={(e) => {
+          const value = e.target.value === 'default' ? undefined : e.target.value
+          setLineHeight(value)
+        }}
+        style={{
+          padding: '4px 8px',
+          border: '1px solid #ccc',
+          borderRadius: '4px',
+          fontSize: '14px',
+          cursor: 'pointer',
+          background: 'white',
+        }}
+        title="Line Height"
+      >
+        <option value="default">Line Height</option>
+        <option value="1">1.0</option>
+        <option value="1.15">1.15</option>
+        <option value="1.5">1.5</option>
+        <option value="2">2.0</option>
+        <option value="2.5">2.5</option>
+      </select>
+
+      {/* Font Family Select */}
+      <select
+        value={currentFont || 'default'}
+        onChange={(e) => {
+          const value = e.target.value === 'default' ? undefined : e.target.value
+          setFont(value)
+        }}
+        style={{
+          padding: '4px 8px',
+          border: '1px solid #ccc',
+          borderRadius: '4px',
+          fontSize: '14px',
+          cursor: 'pointer',
+          background: 'white',
+        }}
+        title="Font Family"
+      >
+        <option value="default">Font</option>
+        <option value="Arial, sans-serif">Arial</option>
+        <option value="'Times New Roman', serif">Times New Roman</option>
+        <option value="'Courier New', monospace">Courier New</option>
+        <option value="Georgia, serif">Georgia</option>
+        <option value="Verdana, sans-serif">Verdana</option>
+        <option value="'Comic Sans MS', cursive">Comic Sans</option>
+        <option value="Impact, fantasy">Impact</option>
+      </select>
     </div>
   )
 }

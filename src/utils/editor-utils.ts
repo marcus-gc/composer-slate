@@ -203,3 +203,51 @@ export const decreaseIndent = (editor: SlateEditor) => {
     }
   }
 }
+
+/**
+ * Get the current line height of the active block
+ * @param editor - The Slate editor instance
+ * @returns The line height value or undefined
+ */
+export const getLineHeight = (editor: SlateEditor): string | undefined => {
+  const { selection } = editor
+  if (!selection) return undefined
+
+  const [match] = Array.from(
+    SlateEditor.nodes(editor, {
+      at: selection,
+      match: (n) => !SlateEditor.isEditor(n) && SlateElement.isElement(n),
+    })
+  )
+
+  if (match) {
+    const [node] = match
+    return (node as any).lineHeight
+  }
+
+  return undefined
+}
+
+/**
+ * Get the current font family of the active block
+ * @param editor - The Slate editor instance
+ * @returns The font family value or undefined
+ */
+export const getFont = (editor: SlateEditor): string | undefined => {
+  const { selection } = editor
+  if (!selection) return undefined
+
+  const [match] = Array.from(
+    SlateEditor.nodes(editor, {
+      at: selection,
+      match: (n) => !SlateEditor.isEditor(n) && SlateElement.isElement(n),
+    })
+  )
+
+  if (match) {
+    const [node] = match
+    return (node as any).font
+  }
+
+  return undefined
+}
