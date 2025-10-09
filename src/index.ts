@@ -4,6 +4,7 @@ export { useComposer } from './context/ComposerContext'
 
 // Plugins
 export * as richText from './plugins/richText'
+export * as layouts from './plugins/layouts'
 
 // Types
 export type {
@@ -18,6 +19,8 @@ export type {
   BulletedListElement,
   NumberedListElement,
   ListItemElement,
+  LayoutContainerElement,
+  LayoutColumnElement,
   FormattedText,
 } from './types'
 

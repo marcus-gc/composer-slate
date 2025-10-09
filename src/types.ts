@@ -54,6 +54,17 @@ export type ListItemElement = {
   children: CustomText[]
 }
 
+export type LayoutContainerElement = {
+  type: 'layout-container'
+  columns?: number
+  children: LayoutColumnElement[]
+}
+
+export type LayoutColumnElement = {
+  type: 'layout-column'
+  children: CustomElement[] | CustomText[]
+}
+
 export type CustomElement =
   | ParagraphElement
   | HeadingOneElement
@@ -63,6 +74,8 @@ export type CustomElement =
   | BulletedListElement
   | NumberedListElement
   | ListItemElement
+  | LayoutContainerElement
+  | LayoutColumnElement
 
 export type FormattedText = {
   text: string

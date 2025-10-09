@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { Descendant } from 'slate'
-import { Composer, useComposer, richText } from '../../src'
+import { Composer, useComposer, richText, layouts } from '../../src'
 
 // Advanced example: Custom toolbar using hooks
 function CustomToolbar() {
-  const { toggleMark, toggleBlock, isMarkActive, isBlockActive, insertBlock, insertText } = useComposer()
+  const { toggleMark, toggleBlock, isMarkActive, isBlockActive, insertBlock, insertText, insertLayout } = useComposer()
 
   const buttonStyle = (isActive: boolean): React.CSSProperties => ({
     padding: '8px 16px',
@@ -99,6 +99,26 @@ function CustomToolbar() {
       >
         New Paragraph
       </button>
+      <button
+        style={actionButtonStyle}
+        onMouseDown={(e) => {
+          e.preventDefault()
+          insertLayout(2)
+        }}
+        title="Insert 2-column layout"
+      >
+        2 Columns
+      </button>
+      <button
+        style={actionButtonStyle}
+        onMouseDown={(e) => {
+          e.preventDefault()
+          insertLayout(3)
+        }}
+        title="Insert 3-column layout"
+      >
+        3 Columns
+      </button>
     </div>
   )
 }
@@ -126,14 +146,14 @@ function App() {
           }}
         >
           <Composer.Root
-            plugins={[richText]}
+            plugins={[richText, layouts]}
             onChange={(newValue) => {
               setSimpleValue(newValue)
               console.log('Simple editor changed:', newValue)
             }}
           >
             <Composer.DefaultToolbar />
-            <Composer.Content />
+            <Composer.Content plugins={[richText, layouts]} />
           </Composer.Root>
         </div>
       </section>
@@ -150,7 +170,7 @@ function App() {
           }}
         >
           <Composer.Root
-            plugins={[richText]}
+            plugins={[richText, layouts]}
             onChange={(newValue) => {
               setAdvancedValue(newValue)
               console.log('Advanced editor changed:', newValue)
@@ -160,6 +180,7 @@ function App() {
               <CustomToolbar />
             </Composer.Toolbar>
             <Composer.Content
+              plugins={[richText, layouts]}
               placeholder="Type something amazing..."
               style={{
                 minHeight: '150px',
