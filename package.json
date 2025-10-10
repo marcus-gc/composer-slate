@@ -1,6 +1,6 @@
 {
-  "name": "composer-slate",
-  "version": "0.1.0",
+  "name": "@givecampus/composer",
+  "version": "0.2.0",
   "description": "A WYSIWYG text editor library based on Slate.js",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -37,9 +37,9 @@
   },
   "dependencies": {
     "is-hotkey": "^0.2.0",
-    "slate": "^0.103.0",
+    "slate": "^0.118.0",
     "slate-history": "^0.109.0",
-    "slate-react": "^0.110.1"
+    "slate-react": "^0.117.4"
   },
   "devDependencies": {
     "@types/react": "^18.2.47",
