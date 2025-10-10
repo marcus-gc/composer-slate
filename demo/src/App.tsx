@@ -189,9 +189,7 @@ function App() {
               console.log('Advanced editor changed:', newValue)
             }}
           >
-            <Composer.Toolbar>
-              <CustomToolbar />
-            </Composer.Toolbar>
+            <CustomToolbar />
             <Composer.Content
               placeholder="Type something amazing..."
               style={{
