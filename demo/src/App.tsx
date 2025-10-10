@@ -166,7 +166,7 @@ function App() {
             }}
           >
             <Composer.DefaultToolbar />
-            <Composer.Content plugins={[richText, layouts, images]} />
+            <Composer.Content />
           </Composer.Root>
         </div>
       </section>
@@ -193,7 +193,6 @@ function App() {
               <CustomToolbar />
             </Composer.Toolbar>
             <Composer.Content
-              plugins={[richText, layouts, images]}
               placeholder="Type something amazing..."
               style={{
                 minHeight: '150px',
