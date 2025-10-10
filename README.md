@@ -39,7 +39,7 @@ function App() {
       onChange={(newValue) => setValue(newValue)}
     >
       <Composer.DefaultToolbar />
-      <Composer.Content plugins={[richText, layouts, images]} />
+      <Composer.Content />
     </Composer.Root>
   )
 }
@@ -85,7 +85,6 @@ function App() {
         <CustomToolbar />
       </Composer.Toolbar>
       <Composer.Content
-        plugins={[richText, layouts, images]}
         placeholder="Type something amazing..."
       />
     </Composer.Root>
