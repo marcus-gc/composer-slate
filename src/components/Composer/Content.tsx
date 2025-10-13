@@ -1,10 +1,13 @@
 import React, { useCallback } from 'react'
 // @ts-ignore - no types available for is-hotkey
-import isHotkey from 'is-hotkey'
+import * as isHotkeyModule from 'is-hotkey'
 import { Editable, RenderElementProps, RenderLeafProps } from 'slate-react'
 import { useComposer } from '../../context/ComposerContext'
 import Element from '../Element'
 import Leaf from '../Leaf'
+
+// Handle both default and named exports for is-hotkey
+const isHotkey = (isHotkeyModule as any).isHotkey || (isHotkeyModule as any).default
 
 export interface ComposerContentProps {
   placeholder?: string
