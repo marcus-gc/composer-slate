@@ -37,9 +37,11 @@ export const elements = {
   'layout-container': {
     component: LayoutContainer,
     showInBlockMenu: false, // Layouts are inserted via insertLayout utility, not converted
+    hideBlockMenu: true,
   },
   'layout-column': {
     component: LayoutColumn,
     showInBlockMenu: false, // Columns are part of layout containers, not standalone blocks
+    hideBlockMenu: true,
   },
 }

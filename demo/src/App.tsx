@@ -16,7 +16,7 @@ function App() {
 
   return (
     <div style={{ padding: '40px 20px' }}>
-      <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
+      <div style={{ maxWidth: '100%', margin: '0 auto' }}>
         <h1 style={{ marginBottom: '10px' }}>Composer Slate</h1>
         <p style={{ marginBottom: '30px', color: '#666' }}>
           A headless rich text editor with block menus, built on Slate.js
@@ -26,7 +26,7 @@ function App() {
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 2fr))',
             gap: '20px',
             marginBottom: '40px',
           }}
