@@ -2,7 +2,7 @@ import { RenderElementProps } from "slate-react"
 
 const LayoutContainer = ({ attributes, children, element }: RenderElementProps) => {
   const el = element as any
-  const columns = el.columns || 2
+  const columns = el.children.length
 
   const style = {
     display: 'grid',

@@ -60,11 +60,19 @@ const renderTextNode = (child: any): React.ReactNode => {
 };
 
 const renderChildren = (children: any[]): React.ReactNode => {
-  return children.map((child, index) => (
+  const rendered = children.map((child, index) => (
     <React.Fragment key={index}>
       {renderTextNode(child)}
     </React.Fragment>
   ));
+
+  // Check if all children are empty - if so, return a non-breaking space to preserve height
+  const hasContent = children.some(child => child.text || child.type);
+  if (!hasContent) {
+    return '\u00A0'; // Non-breaking space
+  }
+
+  return rendered;
 };
 
 const renderElement = (element: PlateElement, index: number): React.ReactNode => {

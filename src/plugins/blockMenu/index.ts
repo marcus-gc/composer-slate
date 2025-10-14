@@ -1,5 +1,5 @@
 import { Plugin } from '../../components/Composer/Root'
-import { convertBlock, duplicateBlock, deleteBlock } from './utils'
+import { convertBlock, duplicateBlock, deleteBlock, moveBlockUp, moveBlockDown } from './utils'
 import { BlockMenuProvider } from '../../context/BlockMenuContext'
 
 export const blockMenu: Plugin = {
@@ -8,6 +8,8 @@ export const blockMenu: Plugin = {
     convertBlock,
     duplicateBlock,
     deleteBlock,
+    moveBlockUp,
+    moveBlockDown,
   },
 }
 
