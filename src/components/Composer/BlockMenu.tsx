@@ -1,39 +1,28 @@
 import React, { ReactNode } from 'react'
-import { BlockMenuProvider } from '../../context/BlockMenuContext'
 import { DefaultBlockMenu } from './DefaultBlockMenu'
 
 export interface BlockMenuProps {
-  children?: ReactNode | ((props: BlockMenuRenderProps) => ReactNode)
+  children?: ReactNode
   className?: string
   style?: React.CSSProperties
 }
 
-export interface BlockMenuRenderProps {
-  isOpen: boolean
-  blockPath: any
-  hoveredBlockPath: any
-}
-
 /**
- * BlockMenu wrapper component
+ * BlockMenu component - renders the block menu UI
+ *
+ * The provider is automatically added by the blockMenu plugin,
+ * so you just need to render the menu component.
  *
  * Usage:
  * 1. Default menu: <Composer.BlockMenu />
- * 2. Custom menu: <Composer.BlockMenu>{(props) => <YourCustomMenu {...props} />}</Composer.BlockMenu>
+ * 2. Custom menu: <Composer.BlockMenu><YourCustomMenu /></Composer.BlockMenu>
  */
 export const BlockMenu: React.FC<BlockMenuProps> = ({ children, className, style }) => {
-  return (
-    <BlockMenuProvider>
-      {!children && <DefaultBlockMenu className={className} style={style} />}
-      {children && typeof children === 'function' ? (
-        // Render prop pattern for custom menus
-        <BlockMenuProvider>
-          {/* The child will use useBlockMenu hook to access state */}
-          {children({ isOpen: false, blockPath: null, hoveredBlockPath: null })}
-        </BlockMenuProvider>
-      ) : (
-        children
-      )}
-    </BlockMenuProvider>
-  )
+  // If no children provided, use the default menu
+  if (!children) {
+    return <DefaultBlockMenu className={className} style={style} />
+  }
+
+  // Otherwise render custom children
+  return <>{children}</>
 }

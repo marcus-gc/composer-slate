@@ -9,6 +9,9 @@ export const convertBlock = (editor: SlateEditor) => (path: Path, newType: strin
 
   if (!Element.isElement(node)) return
 
+  const isList = newType === 'bulleted-list' || newType === 'numbered-list'
+  const isCurrentlyList = node.type === 'bulleted-list' || node.type === 'numbered-list'
+
   // Preserve certain properties when converting
   const preservedProps: Record<string, any> = {}
   if ('align' in node && node.align) {
@@ -24,11 +27,51 @@ export const convertBlock = (editor: SlateEditor) => (path: Path, newType: strin
     preservedProps.indent = node.indent
   }
 
-  Transforms.setNodes(
-    editor,
-    { type: newType, ...preservedProps } as any,
-    { at: path }
-  )
+  // Handle list conversions specially
+  if (isList && !isCurrentlyList) {
+    // Converting TO a list: wrap children in list-item
+    const children = node.children
+    const listItemChildren = children.map((child: any) => ({
+      type: 'list-item',
+      children: [child],
+    }))
+
+    Transforms.removeNodes(editor, { at: path })
+    Transforms.insertNodes(
+      editor,
+      {
+        type: newType,
+        ...preservedProps,
+        children: listItemChildren,
+      } as any,
+      { at: path }
+    )
+  } else if (!isList && isCurrentlyList) {
+    // Converting FROM a list: unwrap list-items
+    const listItems = node.children
+    // Get the first list-item's children as the new block's children
+    const newChildren = listItems.length > 0 && Element.isElement(listItems[0])
+      ? listItems[0].children
+      : [{ text: '' }]
+
+    Transforms.removeNodes(editor, { at: path })
+    Transforms.insertNodes(
+      editor,
+      {
+        type: newType,
+        ...preservedProps,
+        children: newChildren,
+      } as any,
+      { at: path }
+    )
+  } else {
+    // Normal conversion (not involving lists)
+    Transforms.setNodes(
+      editor,
+      { type: newType, ...preservedProps } as any,
+      { at: path }
+    )
+  }
 }
 
 /**

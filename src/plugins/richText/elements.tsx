@@ -53,6 +53,7 @@ const BlockQuote = ({ attributes, children, element }: RenderElementProps) => {
 
 const BulletedList = ({ attributes, children, element }: RenderElementProps) => {
     const style = { textAlign: (element as any).align }
+    console.log(element);
     return (
         <ul style={style} {...attributes}>
             {children}
@@ -110,6 +111,7 @@ export const elements = {
     'list-item': {
         component: ListItem,
         showInBlockMenu: false, // Don't show list items in menu, only the list types
+        hideBlockMenu: true, // Don't show block menu on list items
     },
     'numbered-list': {
         component: NumberedList,

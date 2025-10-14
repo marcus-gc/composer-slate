@@ -10,7 +10,7 @@ export interface BlockMenuHandleProps {
 
 const defaultStyle: React.CSSProperties = {
   position: 'absolute',
-  left: '-24px',
+  left: '4px',
   top: '50%',
   transform: 'translateY(-50%)',
   width: '20px',
@@ -22,6 +22,7 @@ const defaultStyle: React.CSSProperties = {
   opacity: 0.5,
   transition: 'opacity 0.2s',
   userSelect: 'none',
+  zIndex: 10,
 }
 
 const defaultHoverStyle: React.CSSProperties = {

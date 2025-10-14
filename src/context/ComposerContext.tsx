@@ -13,6 +13,7 @@ export interface ComposerContextValue {
     }>
     leaves?: Record<string, any>
     utils?: Record<string, (editor: any) => (...args: any[]) => any>
+    provider?: React.ComponentType<{ children: React.ReactNode }>
   }>
 
   // Formatting

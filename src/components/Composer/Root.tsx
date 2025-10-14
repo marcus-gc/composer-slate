@@ -26,6 +26,7 @@ export interface Plugin {
   }>
   leaves?: Record<string, any>
   utils?: Record<string, (editor: any) => (...args: any[]) => any>
+  provider?: React.ComponentType<{ children: React.ReactNode }> // Optional provider component
 }
 
 export interface ComposerRootProps {
@@ -118,10 +119,24 @@ export const Root: React.FC<ComposerRootProps> = ({
     }
   }, [editor, plugins])
 
+  // Collect all plugin providers
+  const providers = plugins
+    .map(plugin => plugin.provider)
+    .filter((provider): provider is React.ComponentType<{ children: React.ReactNode }> => !!provider)
+
+  // Compose all providers around the children
+  const wrapWithProviders = (content: React.ReactNode): React.ReactNode => {
+    return providers.reduceRight((wrapped, Provider) => {
+      return <Provider>{wrapped}</Provider>
+    }, content)
+  }
+
   return (
-    <div className={className} style={{ position: 'relative' }}>
+    <div className={className}>
       <Slate editor={editor} initialValue={initialValue} onChange={onChange || (() => {})}>
-        <ComposerProvider value={contextValue}>{children}</ComposerProvider>
+        <ComposerProvider value={contextValue}>
+          {wrapWithProviders(children)}
+        </ComposerProvider>
       </Slate>
     </div>
   )

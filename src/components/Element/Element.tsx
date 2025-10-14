@@ -13,7 +13,7 @@ const Paragraph = ({ attributes, children, element }: RenderElementProps) => {
 }
 
 type ComposerElementProps = RenderElementProps & {
-    availableElements: Record<string, { component: any; inline?: boolean; void?: boolean }>
+    availableElements: Record<string, { component: any; inline?: boolean; void?: boolean, hideBlockMenu?: boolean }>
 }
 
 const Element = ({ attributes, children, element, availableElements }: ComposerElementProps) => {
@@ -43,14 +43,18 @@ const Element = ({ attributes, children, element, availableElements }: ComposerE
     const isInline = elementConfig?.inline || false
 
     // Don't show block menu for inline elements
-    if (isInline || !blockMenuContext || !blockPath) {
+    if (isInline || !blockMenuContext || !blockPath || elementConfig?.hideBlockMenu) {
         return <ElementToRender attributes={attributes} children={children} element={element} />
     }
 
     // Wrap block elements with hover container and handle
     return (
         <div
-            style={{ position: 'relative' }}
+            style={{
+                position: 'relative',
+                paddingLeft: '30px', // Make room for the handle
+                marginLeft: '-30px', // Keep content aligned
+            }}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >
