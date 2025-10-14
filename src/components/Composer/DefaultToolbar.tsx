@@ -42,6 +42,8 @@ export const DefaultToolbar: React.FC<DefaultToolbarProps> = ({ className = '', 
     insertLink,
     removeLink,
     isLinkActive,
+    insertLayout,
+    insertImage,
   } = useComposer()
 
   // These will now update when selection changes because useSlate() triggers re-renders
@@ -246,6 +248,43 @@ export const DefaultToolbar: React.FC<DefaultToolbarProps> = ({ className = '', 
         <option value="'Comic Sans MS', cursive">Comic Sans</option>
         <option value="Impact, fantasy">Impact</option>
       </select>
+
+      {/* Layout buttons */}
+      {insertLayout && (
+        <>
+          <button
+            style={buttonStyle(false)}
+            onMouseDown={(e) => handleMouseDown(e, () => insertLayout(2))}
+            title="Insert 2-column layout"
+          >
+            2 Cols
+          </button>
+          <button
+            style={buttonStyle(false)}
+            onMouseDown={(e) => handleMouseDown(e, () => insertLayout(3))}
+            title="Insert 3-column layout"
+          >
+            3 Cols
+          </button>
+        </>
+      )}
+
+      {/* Image button */}
+      {insertImage && (
+        <button
+          style={buttonStyle(false)}
+          onMouseDown={(e) => {
+            e.preventDefault()
+            const url = window.prompt('Enter image URL:')
+            if (url) {
+              insertImage(url)
+            }
+          }}
+          title="Insert image"
+        >
+          🖼️
+        </button>
+      )}
     </div>
   )
 }

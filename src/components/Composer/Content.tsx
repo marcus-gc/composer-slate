@@ -31,7 +31,7 @@ const HOTKEYS: Record<string, string> = {
 
 const defaultStyle: React.CSSProperties = {
   minHeight: '200px',
-  padding: '12px',
+  padding: '12px 12px 12px 42px', // Extra left padding for block menu handles
   border: '1px solid #ccc',
   borderRadius: '4px',
   fontSize: '16px',
