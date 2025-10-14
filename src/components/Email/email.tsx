@@ -9,6 +9,7 @@ import {
   Link,
   Row,
   Column,
+  Img,
 } from '@react-email/components';
 
 interface EmailProps {
@@ -67,10 +68,10 @@ const renderChildren = (children: any[]): React.ReactNode => {
 };
 
 const renderElement = (element: PlateElement, index: number): React.ReactNode => {
-  const { type, children, indent, listStyleType, width, align, lineHeight } = element;
+  const { type, children, indent, listStyleType, width, align, lineHeight, font, url, alt } = element;
   const content = renderChildren(children);
 
-  // Helper to apply alignment and line height
+  // Helper to apply alignment, line height, and font family
   const applyTextStyle = (baseStyle: any) => {
     const style = { ...baseStyle };
     if (align) {
@@ -78,6 +79,9 @@ const renderElement = (element: PlateElement, index: number): React.ReactNode =>
     }
     if (lineHeight) {
       style.lineHeight = lineHeight.toString();
+    }
+    if (font) {
+      style.fontFamily = font;
     }
     return style;
   };
@@ -156,11 +160,46 @@ const renderElement = (element: PlateElement, index: number): React.ReactNode =>
         </Text>
       );
 
-    case 'blockquote':
+    case 'block-quote':
       return (
-        <blockquote key={index} style={styles.blockquote}>
+        <blockquote key={index} style={applyTextStyle(styles.blockquote)}>
           {content}
         </blockquote>
+      );
+
+    case 'bulleted-list':
+      return (
+        <ul key={index} style={applyTextStyle(styles.list)}>
+          {children?.map((child: any, childIndex: number) =>
+            renderElement(child as PlateElement, childIndex)
+          )}
+        </ul>
+      );
+
+    case 'numbered-list':
+      return (
+        <ol key={index} style={applyTextStyle(styles.list)}>
+          {children?.map((child: any, childIndex: number) =>
+            renderElement(child as PlateElement, childIndex)
+          )}
+        </ol>
+      );
+
+    case 'list-item':
+      return (
+        <li key={index} style={applyTextStyle(styles.listItem)}>
+          {content}
+        </li>
+      );
+
+    case 'image':
+      return (
+        <Img
+          key={index}
+          src={url || ''}
+          alt={alt || ''}
+          style={styles.image}
+        />
       );
 
     case 'layout-container':
@@ -248,6 +287,13 @@ const styles = {
     marginTop: '0',
     marginBottom: '12px',
   },
+  list: {
+    fontSize: '16px',
+    lineHeight: '1.6',
+    marginTop: '0',
+    marginBottom: '12px',
+    paddingLeft: '24px',
+  },
   listItem: {
     fontSize: '16px',
     lineHeight: '1.6',
@@ -259,8 +305,17 @@ const styles = {
     paddingLeft: '16px',
     marginLeft: '0',
     marginRight: '0',
+    marginTop: '0',
+    marginBottom: '12px',
     fontStyle: 'italic',
     color: '#6b7280',
+  },
+  image: {
+    maxWidth: '100%',
+    height: 'auto',
+    display: 'block',
+    marginTop: '0',
+    marginBottom: '16px',
   },
   row: {
     marginBottom: '16px',
