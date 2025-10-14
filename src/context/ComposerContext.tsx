@@ -4,7 +4,13 @@ import { Editor as SlateEditor } from 'slate'
 export interface ComposerContextValue {
   editor: SlateEditor
   plugins: Array<{
-    elements?: Record<string, { component: any; inline?: boolean; void?: boolean }>
+    elements?: Record<string, {
+      component: any
+      inline?: boolean
+      void?: boolean
+      label?: string
+      showInBlockMenu?: boolean
+    }>
     leaves?: Record<string, any>
     utils?: Record<string, (editor: any) => (...args: any[]) => any>
   }>

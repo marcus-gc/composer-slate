@@ -26,5 +26,6 @@ export const elements = {
     'image': {
         component: Image,
         void: true,
+        showInBlockMenu: false, // Images are inserted via insertImage utility, not converted
     },
 }

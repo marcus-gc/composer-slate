@@ -36,8 +36,10 @@ const LayoutColumn = ({ attributes, children }: RenderElementProps) => {
 export const elements = {
   'layout-container': {
     component: LayoutContainer,
+    showInBlockMenu: false, // Layouts are inserted via insertLayout utility, not converted
   },
   'layout-column': {
     component: LayoutColumn,
+    showInBlockMenu: false, // Columns are part of layout containers, not standalone blocks
   },
 }

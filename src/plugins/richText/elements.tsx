@@ -94,30 +94,46 @@ const Link = ({ attributes, children, element }: RenderElementProps) => {
 export const elements = {
     'paragraph': {
         component: Paragraph,
+        label: 'Paragraph',
+        showInBlockMenu: true,
     },
     'block-quote': {
         component: BlockQuote,
+        label: 'Quote',
+        showInBlockMenu: true,
     },
     'bulleted-list': {
         component: BulletedList,
+        label: 'Bulleted List',
+        showInBlockMenu: true,
     },
     'list-item': {
         component: ListItem,
+        showInBlockMenu: false, // Don't show list items in menu, only the list types
     },
     'numbered-list': {
         component: NumberedList,
+        label: 'Numbered List',
+        showInBlockMenu: true,
     },
     'heading-one': {
         component: HeadingOne,
+        label: 'Heading 1',
+        showInBlockMenu: true,
     },
     'heading-two': {
         component: HeadingTwo,
+        label: 'Heading 2',
+        showInBlockMenu: true,
     },
     'heading-three': {
         component: HeadingThree,
+        label: 'Heading 3',
+        showInBlockMenu: true,
     },
     'link': {
         component: Link,
         inline: true,
+        showInBlockMenu: false, // Don't show inline elements in block menu
     },
 }

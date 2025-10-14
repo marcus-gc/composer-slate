@@ -21,6 +21,8 @@ export interface Plugin {
     component: any
     inline?: boolean
     void?: boolean
+    label?: string // Human-readable label for block menu
+    showInBlockMenu?: boolean // Whether to show in block menu conversion options
   }>
   leaves?: Record<string, any>
   utils?: Record<string, (editor: any) => (...args: any[]) => any>
@@ -117,7 +119,7 @@ export const Root: React.FC<ComposerRootProps> = ({
   }, [editor, plugins])
 
   return (
-    <div className={className}>
+    <div className={className} style={{ position: 'relative' }}>
       <Slate editor={editor} initialValue={initialValue} onChange={onChange || (() => {})}>
         <ComposerProvider value={contextValue}>{children}</ComposerProvider>
       </Slate>

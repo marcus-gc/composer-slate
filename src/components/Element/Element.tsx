@@ -1,4 +1,7 @@
-import { RenderElementProps } from "slate-react";
+import { useState } from "react";
+import { RenderElementProps, ReactEditor, useSlateStatic } from "slate-react";
+import { useBlockMenu } from "../../context/BlockMenuContext";
+import { BlockMenuHandle } from "../Composer/BlockMenuHandle";
 
 const Paragraph = ({ attributes, children, element }: RenderElementProps) => {
     const style = { textAlign: (element as any).align }
@@ -14,10 +17,47 @@ type ComposerElementProps = RenderElementProps & {
 }
 
 const Element = ({ attributes, children, element, availableElements }: ComposerElementProps) => {
+    const editor = useSlateStatic()
+    const [isHovered, setIsHovered] = useState(false)
+
+    // Try to access block menu context (might not be available if BlockMenu not used)
+    let blockMenuContext = null
+    try {
+        blockMenuContext = useBlockMenu()
+    } catch (e) {
+        // BlockMenu not in use, which is fine
+    }
+
     const elementConfig = availableElements[element.type]
     const ElementToRender = elementConfig?.component || Paragraph;
 
-    return <ElementToRender attributes={attributes} children={children} element={element} />
+    // Get the path of this element
+    let blockPath = null
+    try {
+        blockPath = ReactEditor.findPath(editor as ReactEditor, element)
+    } catch (e) {
+        // Path not found, skip block menu
+    }
+
+    // Check if this is an inline element
+    const isInline = elementConfig?.inline || false
+
+    // Don't show block menu for inline elements
+    if (isInline || !blockMenuContext || !blockPath) {
+        return <ElementToRender attributes={attributes} children={children} element={element} />
+    }
+
+    // Wrap block elements with hover container and handle
+    return (
+        <div
+            style={{ position: 'relative' }}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+        >
+            {isHovered && <BlockMenuHandle blockPath={blockPath} />}
+            <ElementToRender attributes={attributes} children={children} element={element} />
+        </div>
+    )
 }
 
 export default Element;
