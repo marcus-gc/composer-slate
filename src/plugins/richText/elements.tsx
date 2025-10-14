@@ -1,7 +1,11 @@
 import { RenderElementProps } from "slate-react";
 
 const HeadingOne = ({ attributes, children, element }: RenderElementProps) => {
-    const style = { textAlign: (element as any).align }
+    const style = {
+        lineHeight: element.lineHeight,
+        fontFamily: element.font,
+        textAlign: (element as any).align
+    }
     return (
         <h1 style={style} {...attributes}>
             {children}
@@ -10,7 +14,11 @@ const HeadingOne = ({ attributes, children, element }: RenderElementProps) => {
 }
 
 const HeadingTwo = ({ attributes, children, element }: RenderElementProps) => {
-    const style = { textAlign: (element as any).align }
+    const style = {
+        lineHeight: element.lineHeight,
+        fontFamily: element.font,
+        textAlign: (element as any).align
+    }
     return (
         <h2 style={style} {...attributes}>
             {children}
@@ -19,7 +27,11 @@ const HeadingTwo = ({ attributes, children, element }: RenderElementProps) => {
 }
 
 const HeadingThree = ({ attributes, children, element }: RenderElementProps) => {
-    const style = { textAlign: (element as any).align }
+    const style = {
+        lineHeight: element.lineHeight,
+        fontFamily: element.font,
+        textAlign: (element as any).align
+    }
     return (
         <h3 style={style} {...attributes}>
             {children}
@@ -43,7 +55,11 @@ const Paragraph = ({ attributes, children, element }: RenderElementProps) => {
 }
 
 const BlockQuote = ({ attributes, children, element }: RenderElementProps) => {
-    const style = { textAlign: (element as any).align }
+    const style = {
+        lineHeight: element.lineHeight,
+        fontFamily: element.font,
+        textAlign: (element as any).align
+    }
     return (
         <blockquote style={style} {...attributes}>
             {children}
@@ -52,7 +68,11 @@ const BlockQuote = ({ attributes, children, element }: RenderElementProps) => {
 }
 
 const BulletedList = ({ attributes, children, element }: RenderElementProps) => {
-    const style = { textAlign: (element as any).align }
+    const style = {
+        lineHeight: element.lineHeight,
+        fontFamily: element.font,
+        textAlign: (element as any).align
+    }
     console.log(element);
     return (
         <ul style={style} {...attributes}>
@@ -62,7 +82,11 @@ const BulletedList = ({ attributes, children, element }: RenderElementProps) => 
 }
 
 const ListItem = ({ attributes, children, element }: RenderElementProps) => {
-    const style = { textAlign: (element as any).align }
+    const style = {
+        lineHeight: element.lineHeight,
+        fontFamily: element.font,
+        textAlign: (element as any).align
+    }
     return (
         <li style={style} {...attributes}>
             {children}
@@ -71,7 +95,11 @@ const ListItem = ({ attributes, children, element }: RenderElementProps) => {
 }
 
 const NumberedList = ({ attributes, children, element }: RenderElementProps) => {
-    const style = { textAlign: (element as any).align }
+    const style = {
+        lineHeight: element.lineHeight,
+        fontFamily: element.font,
+        textAlign: (element as any).align
+    }
     return (
         <ol style={style} {...attributes}>
             {children}
@@ -81,11 +109,18 @@ const NumberedList = ({ attributes, children, element }: RenderElementProps) => 
 
 const Link = ({ attributes, children, element }: RenderElementProps) => {
     const el = element as any
+    const style = {
+        lineHeight: el.lineHeight,
+        fontFamily: el.font,
+        textAlign: el.align,
+        color: '#0066cc',
+        textDecoration: 'underline'
+    }
     return (
         <a
             {...attributes}
             href={el.url}
-            style={{ color: '#0066cc', textDecoration: 'underline' }}
+            style={style}
         >
             {children}
         </a>
