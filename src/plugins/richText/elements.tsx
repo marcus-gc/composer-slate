@@ -4,7 +4,7 @@ const HeadingOne = ({ attributes, children, element }: RenderElementProps) => {
     const style = {
         lineHeight: element.lineHeight,
         fontFamily: element.font,
-        textAlign: (element as any).align
+        textAlign: element.align as React.CSSProperties['textAlign']
     }
     return (
         <h1 style={style} {...attributes}>
@@ -17,7 +17,7 @@ const HeadingTwo = ({ attributes, children, element }: RenderElementProps) => {
     const style = {
         lineHeight: element.lineHeight,
         fontFamily: element.font,
-        textAlign: (element as any).align
+        textAlign: element.align as React.CSSProperties['textAlign']
     }
     return (
         <h2 style={style} {...attributes}>
@@ -30,7 +30,7 @@ const HeadingThree = ({ attributes, children, element }: RenderElementProps) => 
     const style = {
         lineHeight: element.lineHeight,
         fontFamily: element.font,
-        textAlign: (element as any).align
+        textAlign: element.align as React.CSSProperties['textAlign']
     }
     return (
         <h3 style={style} {...attributes}>
@@ -40,12 +40,11 @@ const HeadingThree = ({ attributes, children, element }: RenderElementProps) => 
 }
 
 const Paragraph = ({ attributes, children, element }: RenderElementProps) => {
-    const el = element as any
     const style = {
-        textAlign: el.align,
-        lineHeight: el.lineHeight,
-        fontFamily: el.font,
-        paddingLeft: el.indent ? `${el.indent * 24}px` : undefined,
+        textAlign: element.align as React.CSSProperties['textAlign'],
+        lineHeight: element.lineHeight,
+        fontFamily: element.font,
+        paddingLeft: 'indent' in element && element.indent ? `${element.indent * 24}px` : undefined,
     }
     return (
         <p style={style} {...attributes}>
@@ -58,7 +57,7 @@ const BlockQuote = ({ attributes, children, element }: RenderElementProps) => {
     const style = {
         lineHeight: element.lineHeight,
         fontFamily: element.font,
-        textAlign: (element as any).align
+        textAlign: element.align as React.CSSProperties['textAlign']
     }
     return (
         <blockquote style={style} {...attributes}>
@@ -71,7 +70,7 @@ const BulletedList = ({ attributes, children, element }: RenderElementProps) => 
     const style = {
         lineHeight: element.lineHeight,
         fontFamily: element.font,
-        textAlign: (element as any).align
+        textAlign: element.align as React.CSSProperties['textAlign']
     }
     console.log(element);
     return (
@@ -85,7 +84,7 @@ const ListItem = ({ attributes, children, element }: RenderElementProps) => {
     const style = {
         lineHeight: element.lineHeight,
         fontFamily: element.font,
-        textAlign: (element as any).align
+        textAlign: element.align as React.CSSProperties['textAlign']
     }
     return (
         <li style={style} {...attributes}>
@@ -98,7 +97,7 @@ const NumberedList = ({ attributes, children, element }: RenderElementProps) => 
     const style = {
         lineHeight: element.lineHeight,
         fontFamily: element.font,
-        textAlign: (element as any).align
+        textAlign: element.align as React.CSSProperties['textAlign']
     }
     return (
         <ol style={style} {...attributes}>
@@ -108,18 +107,17 @@ const NumberedList = ({ attributes, children, element }: RenderElementProps) => 
 }
 
 const Link = ({ attributes, children, element }: RenderElementProps) => {
-    const el = element as any
     const style = {
-        lineHeight: el.lineHeight,
-        fontFamily: el.font,
-        textAlign: el.align,
+        lineHeight: element.lineHeight,
+        fontFamily: element.font,
+        textAlign: element.align as React.CSSProperties['textAlign'],
         color: '#0066cc',
         textDecoration: 'underline'
     }
     return (
         <a
             {...attributes}
-            href={el.url}
+            href={'url' in element ? element.url : undefined}
             style={style}
         >
             {children}

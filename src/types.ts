@@ -4,74 +4,71 @@ import { HistoryEditor } from 'slate-history'
 
 export type CustomEditor = BaseEditor & ReactEditor & HistoryEditor
 
-export type ParagraphElement = {
-  type: 'paragraph'
+export type ElementStyles = {
   align?: string
   lineHeight?: string
   font?: string
+}
+
+export type ParagraphElement = ElementStyles & {
+  type: 'paragraph'
   indent?: number
   children: CustomText[]
 }
 
-export type HeadingOneElement = {
+export type HeadingOneElement = ElementStyles & {
   type: 'heading-one'
-  align?: string
   children: CustomText[]
 }
 
-export type HeadingTwoElement = {
+export type HeadingTwoElement = ElementStyles & {
   type: 'heading-two'
-  align?: string
   children: CustomText[]
 }
 
-export type HeadingThreeElement = {
+export type HeadingThreeElement = ElementStyles & {
   type: 'heading-three'
-  align?: string
   children: CustomText[]
 }
 
-export type BlockQuoteElement = {
+export type BlockQuoteElement = ElementStyles & {
   type: 'block-quote'
-  align?: string
   children: CustomText[]
 }
 
-export type BulletedListElement = {
+export type BulletedListElement = ElementStyles & {
   type: 'bulleted-list'
-  align?: string
   children: CustomText[]
 }
 
-export type NumberedListElement = {
+export type NumberedListElement = ElementStyles & {
   type: 'numbered-list'
-  align?: string
   children: CustomText[]
 }
 
-export type ListItemElement = {
+export type ListItemElement = ElementStyles & {
   type: 'list-item'
   children: CustomText[]
 }
 
-export type LayoutContainerElement = {
+export type LayoutContainerElement = ElementStyles & {
   type: 'layout-container'
   columns?: number
   children: LayoutColumnElement[]
 }
 
-export type LayoutColumnElement = {
+export type LayoutColumnElement = ElementStyles & {
   type: 'layout-column'
   children: CustomElement[] | CustomText[]
 }
 
-export type LinkElement = {
+export type LinkElement = ElementStyles & {
   type: 'link'
   url: string
   children: CustomText[]
 }
 
-export type ImageElement = {
+export type ImageElement = ElementStyles & {
   type: 'image'
   url: string
   alt?: string
