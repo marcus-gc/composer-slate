@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Descendant } from 'slate'
 import { Composer, richText, layouts, images, blockMenu } from '../../src'
-import { Email } from '../../src/components/Email/email'
+import * as Email from '../../src/components/Email'
 import { render } from '@react-email/render'
 
 function App() {
@@ -10,7 +10,7 @@ function App() {
 
   useEffect(() => {
     if (value && value.length > 0) {
-      render(<Email elements={value} />).then(setEmailHtml);
+      render(<Email.Letter elements={value} />).then(setEmailHtml);
     }
   }, [value])
 
