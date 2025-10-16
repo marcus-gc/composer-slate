@@ -18,7 +18,7 @@ function App() {
     <div style={{ padding: '40px 20px' }}>
       <div style={{ maxWidth: '100%', margin: '0 auto' }}>
         <h1 style={{ marginBottom: '10px' }}>Composer Slate</h1>
-        <p style={{ marginBottom: '30px', color: '#666' }}>
+        <p style={{ marginBottom: '30px', color: '#777' }}>
           A headless rich text editor with block menus, built on Slate.js
         </p>
 
@@ -34,7 +34,7 @@ function App() {
           {/* Editor Column */}
           <div style={{ gridColumn: 'span 1' }}>
             <h2 style={{ fontSize: '18px', marginBottom: '15px', fontWeight: '600' }}>Editor</h2>
-            <p style={{ marginBottom: '15px', color: '#666', fontSize: '14px' }}>
+            <p style={{ marginBottom: '15px', color: '#777', fontSize: '14px' }}>
               Hover over blocks to see the menu. Use the toolbar for formatting and layouts.
             </p>
             <div
@@ -62,7 +62,7 @@ function App() {
           {/* JSON Column */}
           <div style={{ gridColumn: 'span 1' }}>
             <h2 style={{ fontSize: '18px', marginBottom: '15px', fontWeight: '600' }}>JSON Output</h2>
-            <p style={{ marginBottom: '15px', color: '#666', fontSize: '14px' }}>
+            <p style={{ marginBottom: '15px', color: '#777', fontSize: '14px' }}>
               The editor's data structure.
             </p>
             <div
@@ -92,7 +92,7 @@ function App() {
           {/* Email Preview Column */}
           <div style={{ gridColumn: 'span 1' }}>
             <h2 style={{ fontSize: '18px', marginBottom: '15px', fontWeight: '600' }}>Email Preview</h2>
-            <p style={{ marginBottom: '15px', color: '#666', fontSize: '14px' }}>
+            <p style={{ marginBottom: '15px', color: '#777', fontSize: '14px' }}>
               Rendered HTML email output.
             </p>
             <div

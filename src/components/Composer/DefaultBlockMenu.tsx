@@ -153,7 +153,7 @@ export const DefaultBlockMenu: React.FC<DefaultBlockMenuProps> = ({ className = 
       {/* Turn Into section */}
       {availableBlockTypes.length > 0 && (
         <>
-          <div style={{ padding: '4px 12px', fontSize: '12px', color: '#666', fontWeight: 'bold' }}>
+          <div style={{ padding: '4px 12px', fontSize: '12px', color: '#777', fontWeight: 'bold' }}>
             Turn into
           </div>
           {availableBlockTypes.map(({ type, label }) => (
