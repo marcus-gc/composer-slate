@@ -18,28 +18,27 @@ export interface LetterProps {
   };
 }
 
-const renderTextNode = (child: any): React.ReactNode => {
-  let text = child.text || '';
+  const renderTextNode = (child: any): React.ReactNode => {
+    let text = child.text || '\u00A0';
 
-  if (!text && !child.type) return null;
+    if (!text && !child.type) return null;
 
-  // Apply text formatting
-  if (child.bold) {
-    text = <strong key={Math.random()}>{text}</strong>;
-  }
-  if (child.italic) {
-    text = <em key={Math.random()}>{text}</em>;
-  }
-  if (child.underline) {
-    text = <u key={Math.random()}>{text}</u>;
-  }
+    // Apply text formatting
+    if (child.bold) {
+      text = <strong key={Math.random()}>{text}</strong>;
+    }
+    if (child.italic) {
+      text = <em key={Math.random()}>{text}</em>;
+    }
+    if (child.underline) {
+      text = <u key={Math.random()}>{text}</u>;
+    }
 
-  return text;
-};
+    return text;
+  };
 
 const renderChildren = (
   children: any[],
-  components: Record<string, ElementRenderer>,
   renderElementFn: (element: any, index: number) => React.ReactNode
 ): React.ReactNode => {
   return children.map((child, index) => {
@@ -84,7 +83,7 @@ const renderElement = (
     }
 
     // For other elements, render text nodes
-    const content = renderChildren(children, components, (el, idx) => renderElement(el, idx, components));
+    const content = renderChildren(children, (el, idx) => renderElement(el, idx, components));
     return Component({ element, children: content, index });
   }
 

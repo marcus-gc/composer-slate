@@ -222,7 +222,7 @@ export const baseComponents: Record<string, ElementRenderer> = {
   ),
 
   'layout-container': ({ element, children, index }) => (
-    <Row key={index} style={styles.row}>
+    <Row key={index} style={{ ...styles.row, ...element }}>
       {children}
     </Row>
   ),
