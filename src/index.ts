@@ -9,6 +9,8 @@ export * as layouts from './plugins/layouts'
 export * as images from './plugins/images'
 export { blockMenu } from './plugins/blockMenu'
 
+export * as Email from './components/Email'
+
 // Types
 export type {
   CustomEditor,
