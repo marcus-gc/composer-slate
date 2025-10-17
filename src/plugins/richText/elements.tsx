@@ -1,119 +1,62 @@
-import { RenderElementProps } from "slate-react";
+import { RenderElementProps } from "slate-react"
+import { createHeading } from './factories'
+import { getElementStyles, getParagraphStyles } from './styles'
+import { useComposerTheme } from '../../context/ThemeContext'
 
-const HeadingOne = ({ attributes, children, element }: RenderElementProps) => {
-    const style = {
-        lineHeight: element.lineHeight,
-        fontFamily: element.font,
-        textAlign: element.align as React.CSSProperties['textAlign']
-    }
-    return (
-        <h1 style={style} {...attributes}>
-            {children}
-        </h1>
-    )
-}
-
-const HeadingTwo = ({ attributes, children, element }: RenderElementProps) => {
-    const style = {
-        lineHeight: element.lineHeight,
-        fontFamily: element.font,
-        textAlign: element.align as React.CSSProperties['textAlign']
-    }
-    return (
-        <h2 style={style} {...attributes}>
-            {children}
-        </h2>
-    )
-}
-
-const HeadingThree = ({ attributes, children, element }: RenderElementProps) => {
-    const style = {
-        lineHeight: element.lineHeight,
-        fontFamily: element.font,
-        textAlign: element.align as React.CSSProperties['textAlign']
-    }
-    return (
-        <h3 style={style} {...attributes}>
-            {children}
-        </h3>
-    )
-}
+// Headings using factory pattern
+const HeadingOne = createHeading(1)
+const HeadingTwo = createHeading(2)
+const HeadingThree = createHeading(3)
 
 const Paragraph = ({ attributes, children, element }: RenderElementProps) => {
-    const style = {
-        textAlign: element.align as React.CSSProperties['textAlign'],
-        lineHeight: element.lineHeight,
-        fontFamily: element.font,
-        paddingLeft: 'indent' in element && element.indent ? `${element.indent * 24}px` : undefined,
-    }
     return (
-        <p style={style} {...attributes}>
+        <p style={getParagraphStyles(element)} {...attributes}>
             {children}
         </p>
     )
 }
 
 const BlockQuote = ({ attributes, children, element }: RenderElementProps) => {
-    const style = {
-        lineHeight: element.lineHeight,
-        fontFamily: element.font,
-        textAlign: element.align as React.CSSProperties['textAlign']
-    }
     return (
-        <blockquote style={style} {...attributes}>
+        <blockquote style={getElementStyles(element)} {...attributes}>
             {children}
         </blockquote>
     )
 }
 
 const BulletedList = ({ attributes, children, element }: RenderElementProps) => {
-    const style = {
-        lineHeight: element.lineHeight,
-        fontFamily: element.font,
-        textAlign: element.align as React.CSSProperties['textAlign']
-    }
-    console.log(element);
     return (
-        <ul style={style} {...attributes}>
+        <ul style={getElementStyles(element)} {...attributes}>
             {children}
         </ul>
     )
 }
 
 const ListItem = ({ attributes, children, element }: RenderElementProps) => {
-    const style = {
-        lineHeight: element.lineHeight,
-        fontFamily: element.font,
-        textAlign: element.align as React.CSSProperties['textAlign']
-    }
     return (
-        <li style={style} {...attributes}>
+        <li style={getElementStyles(element)} {...attributes}>
             {children}
         </li>
     )
 }
 
 const NumberedList = ({ attributes, children, element }: RenderElementProps) => {
-    const style = {
-        lineHeight: element.lineHeight,
-        fontFamily: element.font,
-        textAlign: element.align as React.CSSProperties['textAlign']
-    }
     return (
-        <ol style={style} {...attributes}>
+        <ol style={getElementStyles(element)} {...attributes}>
             {children}
         </ol>
     )
 }
 
 const Link = ({ attributes, children, element }: RenderElementProps) => {
+    const theme = useComposerTheme()
+
     const style = {
-        lineHeight: element.lineHeight,
-        fontFamily: element.font,
-        textAlign: element.align as React.CSSProperties['textAlign'],
-        color: '#0066cc',
+        ...getElementStyles(element),
+        color: theme.primaryColor,
         textDecoration: 'underline'
     }
+
     return (
         <a
             {...attributes}

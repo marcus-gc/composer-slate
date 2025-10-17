@@ -4,6 +4,7 @@ import { Slate, withReact } from 'slate-react'
 import { withHistory } from 'slate-history'
 import { ComposerProvider } from '../../context/ComposerContext'
 import { ThemeProvider } from '../../context/ThemeContext'
+import { ComposerErrorBoundary } from '../ErrorBoundary'
 import { ComposerTheme } from '../../types'
 import {
   toggleMark,
@@ -137,13 +138,15 @@ export const Root: React.FC<ComposerRootProps> = ({
 
   // Wrap content with theme provider if theme is provided
   const content = (
-    <div className={className}>
-      <Slate editor={editor} initialValue={initialValue} onChange={onChange || (() => {})}>
-        <ComposerProvider value={contextValue}>
-          {wrapWithProviders(children)}
-        </ComposerProvider>
-      </Slate>
-    </div>
+    <ComposerErrorBoundary>
+      <div className={className}>
+        <Slate editor={editor} initialValue={initialValue} onChange={onChange || (() => {})}>
+          <ComposerProvider value={contextValue}>
+            {wrapWithProviders(children)}
+          </ComposerProvider>
+        </Slate>
+      </div>
+    </ComposerErrorBoundary>
   )
 
   // Only wrap with ThemeProvider if theme is provided
