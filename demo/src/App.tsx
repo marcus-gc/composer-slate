@@ -1,12 +1,20 @@
 import { useState, useEffect } from 'react'
 import { Descendant } from 'slate'
-import { Composer, richText, layouts, images, blockMenu } from '../../src'
+import { Composer, richText, layouts, images, blockMenu, ComposerTheme } from '../../src'
 import * as Email from '../../src/components/Email'
 import { render } from '@react-email/render'
 
 function App() {
   const [value, setValue] = useState<Descendant[]>()
   const [emailHtml, setEmailHtml] = useState<string>('');
+
+  // Example theme - you can customize these values
+  const theme: ComposerTheme = {
+    primaryColor: '#0066cc',
+    textColor: '#1a1a1a',
+    backgroundColor: '#ffffff',
+    fontFamily: 'Inter, -apple-system, sans-serif',
+  };
 
   useEffect(() => {
     if (value && value.length > 0) {
@@ -47,6 +55,7 @@ function App() {
             >
               <Composer.Root
                 plugins={[richText, layouts, images, blockMenu]}
+                theme={theme}
                 onChange={(newValue) => {
                   setValue(newValue)
                   console.log('Editor changed:', newValue)

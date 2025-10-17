@@ -104,6 +104,25 @@ export type FormattedText = {
 
 export type CustomText = FormattedText
 
+/**
+ * Theme configuration for the Composer.
+ *
+ * @property primaryColor - The primary brand color (required)
+ * @property textColor - The default text color (default: '#000000')
+ * @property backgroundColor - The default background color (default: '#ffffff')
+ * @property fontFamily - The default font family (default: 'Arial, sans-serif')
+ */
+export interface ComposerTheme {
+  /** Primary brand color - used for buttons, links, and accents */
+  primaryColor: string
+  /** Default text color for content */
+  textColor?: string
+  /** Default background color */
+  backgroundColor?: string
+  /** Default font family */
+  fontFamily?: string
+}
+
 declare module 'slate' {
   interface CustomTypes {
     Editor: CustomEditor

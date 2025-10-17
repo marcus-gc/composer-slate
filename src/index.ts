@@ -2,6 +2,7 @@
 export { Composer } from './components/Composer'
 export { useComposer } from './context/ComposerContext'
 export { useBlockMenu } from './context/BlockMenuContext'
+export { useComposerTheme } from './context/ThemeContext'
 
 // Plugins
 export * as richText from './plugins/richText'
@@ -29,6 +30,7 @@ export type {
   LinkElement,
   ImageElement,
   FormattedText,
+  ComposerTheme,
 } from './types'
 
 export type {
