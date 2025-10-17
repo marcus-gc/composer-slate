@@ -1,8 +1,10 @@
 import { RenderElementProps } from "slate-react"
+import { useComposerTheme } from '../../context/ThemeContext'
+import { isLayoutContainer } from '../../utils/typeGuards'
 
 const LayoutContainer = ({ attributes, children, element }: RenderElementProps) => {
-  const el = element as any
-  const columns = el.columns || 2
+  // Use type guard for proper type safety
+  const columns = isLayoutContainer(element) ? (element.columns ?? 2) : 2
 
   const style = {
     display: 'grid',
@@ -19,10 +21,12 @@ const LayoutContainer = ({ attributes, children, element }: RenderElementProps) 
 }
 
 const LayoutColumn = ({ attributes, children }: RenderElementProps) => {
+  const theme = useComposerTheme()
+
   const style = {
     minHeight: '50px',
     padding: '8px',
-    border: '1px dashed #ccc',
+    border: `1px dashed ${theme.textColor}`,
     borderRadius: '4px',
   }
 

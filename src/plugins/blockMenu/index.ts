@@ -1,6 +1,22 @@
+/**
+ * Block menu plugin for Composer
+ *
+ * Provides:
+ * - **Provider**: BlockMenuProvider (state management for menu)
+ * - **Utils**: convertBlock, duplicateBlock, deleteBlock
+ *
+ * Note: This plugin includes a context provider that wraps the editor
+ * to manage block menu state.
+ */
+
 import { Plugin } from '../../components/Composer/Root'
-import { convertBlock, duplicateBlock, deleteBlock } from './utils'
 import { BlockMenuProvider } from '../../context/BlockMenuContext'
+
+import {
+  convertBlock,
+  duplicateBlock,
+  deleteBlock,
+} from './utils'
 
 export const blockMenu: Plugin = {
   provider: BlockMenuProvider,
@@ -10,5 +26,3 @@ export const blockMenu: Plugin = {
     deleteBlock,
   },
 }
-
-export * from './utils'

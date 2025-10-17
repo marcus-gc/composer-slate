@@ -1,6 +1,7 @@
 import React from 'react'
 import { useSlate } from 'slate-react'
 import { useComposer } from '../../context/ComposerContext'
+import { useComposerTheme } from '../../context/ThemeContext'
 
 export interface DefaultToolbarProps {
   className?: string
@@ -14,19 +15,22 @@ const defaultStyle: React.CSSProperties = {
   flexWrap: 'wrap',
 }
 
-const buttonStyle = (isActive: boolean): React.CSSProperties => ({
+const createButtonStyle = (isActive: boolean, primaryColor: string): React.CSSProperties => ({
   padding: '4px 8px',
-  border: '1px solid #ccc',
+  border: `1px solid ${isActive ? primaryColor : '#e0e0e0'}`,
   borderRadius: '4px',
-  background: isActive ? '#e0e0e0' : 'white',
+  background: isActive ? `${primaryColor}20` : 'white',
   cursor: 'pointer',
   fontSize: '14px',
   fontWeight: isActive ? 'bold' : 'normal',
+  color: isActive ? primaryColor : '#333',
 })
 
 export const DefaultToolbar: React.FC<DefaultToolbarProps> = ({ className = '', style }) => {
   // useSlate triggers re-renders on selection changes
   useSlate()
+
+  const theme = useComposerTheme()
 
   const {
     toggleMark,
@@ -55,6 +59,8 @@ export const DefaultToolbar: React.FC<DefaultToolbarProps> = ({ className = '', 
     e.preventDefault()
     action()
   }
+
+  const buttonStyle = (isActive: boolean) => createButtonStyle(isActive, theme.primaryColor)
 
   return (
     <div className={className} style={style || defaultStyle}>
@@ -206,7 +212,7 @@ export const DefaultToolbar: React.FC<DefaultToolbarProps> = ({ className = '', 
         }}
         style={{
           padding: '4px 8px',
-          border: '1px solid #ccc',
+          border: '1px solid #e0e0e0',
           borderRadius: '4px',
           fontSize: '14px',
           cursor: 'pointer',
@@ -231,7 +237,7 @@ export const DefaultToolbar: React.FC<DefaultToolbarProps> = ({ className = '', 
         }}
         style={{
           padding: '4px 8px',
-          border: '1px solid #ccc',
+          border: '1px solid #e0e0e0',
           borderRadius: '4px',
           fontSize: '14px',
           cursor: 'pointer',

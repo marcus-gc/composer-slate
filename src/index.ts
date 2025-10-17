@@ -3,11 +3,12 @@ export { Composer } from './components/Composer'
 export { useComposer } from './context/ComposerContext'
 export { useBlockMenu } from './context/BlockMenuContext'
 export { useComposerTheme } from './context/ThemeContext'
+export { ComposerErrorBoundary } from './components/ErrorBoundary'
 
 // Plugins
-export * as richText from './plugins/richText'
-export * as layouts from './plugins/layouts'
-export * as images from './plugins/images'
+export { richText } from './plugins/richText'
+export { layouts } from './plugins/layouts'
+export { images } from './plugins/images'
 export { blockMenu } from './plugins/blockMenu'
 
 export * as Email from './components/Email'
@@ -46,3 +47,6 @@ export type {
 
 export type { ComposerContextValue } from './context/ComposerContext'
 export type { BlockMenuContextValue } from './context/BlockMenuContext'
+
+// Type guards
+export * from './utils/typeGuards'

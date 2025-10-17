@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useMemo } from 'react'
 import { ReactEditor } from 'slate-react'
 import { useBlockMenu } from '../../context/BlockMenuContext'
 import { useComposer } from '../../context/ComposerContext'
+import { useComposerTheme } from '../../context/ThemeContext'
 import { Node, Element } from 'slate'
 
 export interface DefaultBlockMenuProps {
@@ -9,16 +10,16 @@ export interface DefaultBlockMenuProps {
   style?: React.CSSProperties
 }
 
-const defaultMenuStyle: React.CSSProperties = {
+const createDefaultMenuStyle = (theme: { backgroundColor: string }): React.CSSProperties => ({
   position: 'absolute',
-  backgroundColor: 'white',
-  border: '1px solid #ccc',
+  backgroundColor: theme.backgroundColor,
+  border: '1px solid #e0e0e0',
   borderRadius: '4px',
   boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
   padding: '4px',
   minWidth: '200px',
   zIndex: 1000,
-}
+})
 
 const defaultItemStyle: React.CSSProperties = {
   padding: '8px 12px',
@@ -28,9 +29,9 @@ const defaultItemStyle: React.CSSProperties = {
   transition: 'background-color 0.2s',
 }
 
-const defaultItemHoverStyle: React.CSSProperties = {
-  backgroundColor: '#f0f0f0',
-}
+const createItemHoverStyle = (primaryColor: string): React.CSSProperties => ({
+  backgroundColor: `${primaryColor}10`,
+})
 
 const defaultSeparatorStyle: React.CSSProperties = {
   height: '1px',
@@ -41,6 +42,7 @@ const defaultSeparatorStyle: React.CSSProperties = {
 export const DefaultBlockMenu: React.FC<DefaultBlockMenuProps> = ({ className = '', style }) => {
   const { isOpen, blockPath, closeMenu } = useBlockMenu()
   const { editor, plugins, convertBlock, duplicateBlock, deleteBlock } = useComposer()
+  const theme = useComposerTheme()
   const menuRef = useRef<HTMLDivElement>(null)
   const [position, setPosition] = React.useState<{ top: number; left: number } | null>(null)
   const [hoveredItem, setHoveredItem] = React.useState<string | null>(null)
@@ -139,12 +141,15 @@ export const DefaultBlockMenu: React.FC<DefaultBlockMenuProps> = ({ className = 
     closeMenu()
   }
 
+  const itemHoverStyle = createItemHoverStyle(theme.primaryColor)
+  const activeItemStyle = { backgroundColor: `${theme.primaryColor}20` }
+
   return (
     <div
       ref={menuRef}
       className={className}
       style={{
-        ...defaultMenuStyle,
+        ...createDefaultMenuStyle(theme),
         ...style,
         top: `${position.top}px`,
         left: `${position.left}px`,
@@ -153,7 +158,7 @@ export const DefaultBlockMenu: React.FC<DefaultBlockMenuProps> = ({ className = 
       {/* Turn Into section */}
       {availableBlockTypes.length > 0 && (
         <>
-          <div style={{ padding: '4px 12px', fontSize: '12px', color: '#777', fontWeight: 'bold' }}>
+          <div style={{ padding: '4px 12px', fontSize: '12px', color: theme.textColor, opacity: 0.6, fontWeight: 'bold' }}>
             Turn into
           </div>
           {availableBlockTypes.map(({ type, label }) => (
@@ -161,8 +166,8 @@ export const DefaultBlockMenu: React.FC<DefaultBlockMenuProps> = ({ className = 
               key={type}
               style={{
                 ...defaultItemStyle,
-                ...(hoveredItem === `convert-${type}` ? defaultItemHoverStyle : {}),
-                ...(currentBlockType === type ? { backgroundColor: '#e6f7ff' } : {}),
+                ...(hoveredItem === `convert-${type}` ? itemHoverStyle : {}),
+                ...(currentBlockType === type ? activeItemStyle : {}),
               }}
               onMouseEnter={() => setHoveredItem(`convert-${type}`)}
               onMouseLeave={() => setHoveredItem(null)}
@@ -172,7 +177,7 @@ export const DefaultBlockMenu: React.FC<DefaultBlockMenuProps> = ({ className = 
               }}
             >
               {label}
-              {currentBlockType === type && <span style={{ marginLeft: '8px' }}>✓</span>}
+              {currentBlockType === type && <span style={{ marginLeft: '8px', color: theme.primaryColor }}>✓</span>}
             </div>
           ))}
           <div style={defaultSeparatorStyle} />
@@ -183,7 +188,7 @@ export const DefaultBlockMenu: React.FC<DefaultBlockMenuProps> = ({ className = 
       <div
         style={{
           ...defaultItemStyle,
-          ...(hoveredItem === 'duplicate' ? defaultItemHoverStyle : {}),
+          ...(hoveredItem === 'duplicate' ? itemHoverStyle : {}),
         }}
         onMouseEnter={() => setHoveredItem('duplicate')}
         onMouseLeave={() => setHoveredItem(null)}
@@ -197,7 +202,7 @@ export const DefaultBlockMenu: React.FC<DefaultBlockMenuProps> = ({ className = 
       <div
         style={{
           ...defaultItemStyle,
-          ...(hoveredItem === 'delete' ? defaultItemHoverStyle : {}),
+          ...(hoveredItem === 'delete' ? itemHoverStyle : {}),
           color: '#d32f2f',
         }}
         onMouseEnter={() => setHoveredItem('delete')}
