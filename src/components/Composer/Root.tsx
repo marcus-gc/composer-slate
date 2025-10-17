@@ -3,6 +3,8 @@ import { createEditor, Descendant } from 'slate'
 import { Slate, withReact } from 'slate-react'
 import { withHistory } from 'slate-history'
 import { ComposerProvider } from '../../context/ComposerContext'
+import { ThemeProvider } from '../../context/ThemeContext'
+import { ComposerTheme } from '../../types'
 import {
   toggleMark,
   toggleBlock,
@@ -35,6 +37,7 @@ export interface ComposerRootProps {
   onChange?: (value: Descendant[]) => void
   plugins?: Plugin[]
   className?: string
+  theme?: ComposerTheme
 }
 
 const defaultInitialValue: Descendant[] = [
@@ -50,6 +53,7 @@ export const Root: React.FC<ComposerRootProps> = ({
   onChange,
   plugins = [],
   className = '',
+  theme,
 }) => {
   const editor = useMemo(() => {
     let ed = withHistory(withReact(createEditor()))
@@ -131,7 +135,8 @@ export const Root: React.FC<ComposerRootProps> = ({
     }, content)
   }
 
-  return (
+  // Wrap content with theme provider if theme is provided
+  const content = (
     <div className={className}>
       <Slate editor={editor} initialValue={initialValue} onChange={onChange || (() => {})}>
         <ComposerProvider value={contextValue}>
@@ -140,4 +145,11 @@ export const Root: React.FC<ComposerRootProps> = ({
       </Slate>
     </div>
   )
+
+  // Only wrap with ThemeProvider if theme is provided
+  if (theme) {
+    return <ThemeProvider theme={theme}>{content}</ThemeProvider>
+  }
+
+  return content
 }
