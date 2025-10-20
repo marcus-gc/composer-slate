@@ -15,6 +15,7 @@ import {
   getListItemStyles,
   getLinkStyles,
 } from '../../plugins/richText-email/sharedEmailStyles';
+import type { ComposerTheme } from '../../types';
 
 export interface ElementRendererProps {
   element: any;
@@ -42,39 +43,44 @@ const layoutStyles = {
   },
 };
 
-export const baseComponents: Record<string, ElementRenderer> = {
+/**
+ * Creates base email components with optional theme support
+ * @param theme - Optional ComposerTheme to apply brand colors
+ * @returns Record of element type to renderer function
+ */
+export const createBaseComponents = (theme?: ComposerTheme): Record<string, ElementRenderer> => ({
   'heading-one': ({ element, children, index }) => (
-    <Heading key={index} as="h1" style={getHeadingStyles(1, element)}>
+    <Heading key={index} as="h1" style={getHeadingStyles(1, element, theme)}>
       {children}
     </Heading>
   ),
 
   'heading-two': ({ element, children, index }) => (
-    <Heading key={index} as="h2" style={getHeadingStyles(2, element)}>
+    <Heading key={index} as="h2" style={getHeadingStyles(2, element, theme)}>
       {children}
     </Heading>
   ),
 
   'heading-three': ({ element, children, index }) => (
-    <Heading key={index} as="h3" style={getHeadingStyles(3, element)}>
+    <Heading key={index} as="h3" style={getHeadingStyles(3, element, theme)}>
       {children}
     </Heading>
   ),
 
   h4: ({ element, children, index }) => (
-    <Heading key={index} as="h4" style={getHeadingStyles(4, element)}>
+    <Heading key={index} as="h4" style={getHeadingStyles(4, element, theme)}>
       {children}
     </Heading>
   ),
 
   h5: ({ element, children, index }) => (
-    <Heading key={index} as="h5" style={getHeadingStyles(5, element)}>
+    <Heading key={index} as="h5" style={getHeadingStyles(5, element, theme)}>
       {children}
     </Heading>
   ),
 
   h6: ({ element, children, index }) => (
-    <Heading key={index} as="h6" style={getHeadingStyles(6, element)}>
+    <Heading key={index} as="h6" style={getHeadingStyles(6, element, theme)}>
       {children}
     </Heading>
   ),
@@ -97,7 +103,7 @@ export const baseComponents: Record<string, ElementRenderer> = {
     // Check if this paragraph has indentation (but not a list)
     if (element.indent && !element.listStyleType) {
       const indentPx = element.indent * 40; // 40px per indent level for regular paragraphs
-      const style = { ...getParagraphStyles(element), marginLeft: `${indentPx}px` };
+      const style = { ...getParagraphStyles(element, theme), marginLeft: `${indentPx}px` };
 
       return (
         <Text key={index} style={style}>
@@ -107,7 +113,7 @@ export const baseComponents: Record<string, ElementRenderer> = {
     }
 
     return (
-      <Text key={index} style={getParagraphStyles(element)}>
+      <Text key={index} style={getParagraphStyles(element, theme)}>
         {children}
       </Text>
     );
@@ -162,7 +168,7 @@ export const baseComponents: Record<string, ElementRenderer> = {
     <Link
       key={index}
       href={element.url || '#'}
-      style={getLinkStyles()}
+      style={getLinkStyles(theme?.primaryColor, element)}
     >
       {children}
     </Link>
@@ -173,9 +179,14 @@ export const baseComponents: Record<string, ElementRenderer> = {
     <Link
       key={index}
       href={element.url || '#'}
-      style={getLinkStyles()}
+      style={getLinkStyles(theme?.primaryColor, element)}
     >
       {children}
     </Link>
   ),
-};
+});
+
+/**
+ * Default base components without theme (for backward compatibility)
+ */
+export const baseComponents = createBaseComponents();

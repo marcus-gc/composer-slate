@@ -1,5 +1,5 @@
 import type React from 'react'
-import type { CustomElement } from '../../types'
+import type { CustomElement, ComposerTheme } from '../../types'
 
 /**
  * Shared email element styles used by both:
@@ -21,7 +21,8 @@ export const getBaseElementStyles = (element: CustomElement): React.CSSPropertie
 // Heading styles with defaults
 export const getHeadingStyles = (
   level: 1 | 2 | 3 | 4 | 5 | 6,
-  element?: CustomElement
+  element?: CustomElement,
+  theme?: ComposerTheme
 ): React.CSSProperties => {
   const headingDefaults: Record<number, React.CSSProperties> = {
     1: {
@@ -64,13 +65,19 @@ export const getHeadingStyles = (
 
   const defaults = headingDefaults[level]
 
+  const baseStyles = {
+    ...defaults,
+    ...(theme?.textColor && { color: theme.textColor }),
+    ...(theme?.fontFamily && !element?.font && { fontFamily: theme.fontFamily }),
+  }
+
   if (!element) {
-    return defaults
+    return baseStyles
   }
 
   // Override defaults with element-specific properties
   return {
-    ...defaults,
+    ...baseStyles,
     ...(element.lineHeight && { lineHeight: element.lineHeight }),
     ...(element.font && { fontFamily: element.font }),
     ...(element.align && { textAlign: element.align as React.CSSProperties['textAlign'] }),
@@ -78,12 +85,14 @@ export const getHeadingStyles = (
 }
 
 // Paragraph styles
-export const getParagraphStyles = (element?: CustomElement): React.CSSProperties => {
+export const getParagraphStyles = (element?: CustomElement, theme?: ComposerTheme): React.CSSProperties => {
   const defaults: React.CSSProperties = {
     fontSize: '16px',
     lineHeight: '1.6',
     marginTop: '0',
     marginBottom: '12px',
+    ...(theme?.textColor && { color: theme.textColor }),
+    ...(theme?.fontFamily && { fontFamily: theme.fontFamily }),
   }
 
   if (!element) {

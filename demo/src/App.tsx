@@ -20,13 +20,13 @@ function App() {
 
   useEffect(() => {
     if (value && value.length > 0) {
-      render(<Email.Letter elements={value} />).then(setEmailHtml);
+      render(<Email.Letter elements={value} theme={theme} />).then(setEmailHtml);
     }
   }, [value])
 
   useEffect(() => {
     if (emailValue && emailValue.length > 0) {
-      render(<Email.Letter elements={emailValue} />).then(setEmailPluginsHtml);
+      render(<Email.Letter elements={emailValue} theme={theme} />).then(setEmailPluginsHtml);
     }
   }, [emailValue])
 

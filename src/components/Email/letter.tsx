@@ -5,13 +5,15 @@ import {
   Body,
   Container,
 } from '@react-email/components';
-import { baseComponents, ElementRenderer } from './baseComponents.tsx';
+import { createBaseComponents, ElementRenderer } from './baseComponents.tsx';
+import type { ComposerTheme } from '../../types';
 
 export interface LetterProps {
   elements: any[];
   components?: Record<string, ElementRenderer>;
   textDirection?: 'ltr' | 'rtl';
   language?: string;
+  theme?: ComposerTheme;
   styles?: {
     body?: React.CSSProperties;
     container?: React.CSSProperties;
@@ -110,14 +112,18 @@ export function Letter({
   components = {},
   language = 'en',
   textDirection = 'ltr',
+  theme,
   styles = {
     body: {fontFamily: 'Arial, sans-serif'},
     container: { maxWidth: '600px', margin: '0 auto', padding: '20px' }
   }
 }: LetterProps) {
-  // Merge custom components with defaults
+  // Create base components with theme support
+  const themedBaseComponents = createBaseComponents(theme);
+
+  // Merge custom components with themed defaults
   const mergedComponents = {
-    ...baseComponents,
+    ...themedBaseComponents,
     ...components,
   };
 
