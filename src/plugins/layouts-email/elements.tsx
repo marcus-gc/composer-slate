@@ -20,14 +20,16 @@ const LayoutColumn = ({ attributes, children }: RenderElementProps) => {
   const style = {
     verticalAlign: 'top' as const,
     padding: '0 12px',
-    border: `1px dashed ${theme.textColor}`,
     borderRadius: '4px',
     opacity: 0.3,
   }
 
+  const innerStyle = {
+    border: `1px dashed ${theme.textColor}`,
+  }
   return (
     <Column style={style} {...attributes}>
-      {children}
+      <div style={innerStyle}>{children}</div>
     </Column>
   )
 }

@@ -67,7 +67,7 @@ function App() {
                 }}
               >
                 <Composer.Root
-                  plugins={[richTextEmail, layoutsEmail, imagesEmail]}
+                  plugins={[richTextEmail, layoutsEmail, imagesEmail, blockMenu]}
                   theme={theme}
                   onChange={(newValue) => {
                     setEmailValue(newValue)
@@ -75,6 +75,7 @@ function App() {
                   }}
                 >
                   <Composer.DefaultToolbar />
+                  <Composer.BlockMenu />
                   <Composer.Content placeholder="Start typing with email plugins..." />
                 </Composer.Root>
               </div>

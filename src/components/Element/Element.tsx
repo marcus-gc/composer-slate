@@ -52,8 +52,8 @@ const Element = ({ attributes, children, element, availableElements }: ComposerE
         <div
             style={{
                 position: 'relative',
-                paddingLeft: '30px', // Make room for the handle
-                marginLeft: '-30px', // Keep content aligned
+                paddingLeft: '24px', // Make room for the handle
+                marginLeft: '-24px', // Keep content aligned
             }}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
