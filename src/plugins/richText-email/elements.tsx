@@ -1,8 +1,14 @@
 import { Text, Link as EmailLink } from '@react-email/components'
 import { RenderElementProps } from 'slate-react'
-import { getElementStyles, getParagraphStyles } from '../richText/styles'
 import { useComposerTheme } from '../../context/ThemeContext'
 import { createHeading } from './factories'
+import {
+  getParagraphStyles,
+  getBlockQuoteStyles,
+  getListStyles,
+  getListItemStyles,
+  getLinkStyles,
+} from './sharedEmailStyles'
 
 // Headings using email-specific factory
 const HeadingOne = createHeading(1)
@@ -10,24 +16,17 @@ const HeadingTwo = createHeading(2)
 const HeadingThree = createHeading(3)
 
 const Paragraph = ({ attributes, children, element }: RenderElementProps) => {
+  const style = getParagraphStyles(element)
+
   return (
-    <Text style={getParagraphStyles(element)} {...attributes}>
+    <Text style={style} {...attributes}>
       {children}
     </Text>
   )
 }
 
 const BlockQuote = ({ attributes, children, element }: RenderElementProps) => {
-  const baseStyle = getElementStyles(element)
-  const style = {
-    ...baseStyle,
-    borderLeft: '4px solid #e5e7eb',
-    paddingLeft: '16px',
-    marginLeft: '0',
-    marginRight: '0',
-    fontStyle: 'italic',
-    color: '#6b7280',
-  }
+  const style = getBlockQuoteStyles(element)
 
   return (
     <blockquote style={style} {...attributes}>
@@ -37,24 +36,30 @@ const BlockQuote = ({ attributes, children, element }: RenderElementProps) => {
 }
 
 const BulletedList = ({ attributes, children, element }: RenderElementProps) => {
+  const style = getListStyles(element)
+
   return (
-    <ul style={getElementStyles(element)} {...attributes}>
+    <ul style={style} {...attributes}>
       {children}
     </ul>
   )
 }
 
 const ListItem = ({ attributes, children, element }: RenderElementProps) => {
+  const style = getListItemStyles(element)
+
   return (
-    <li style={getElementStyles(element)} {...attributes}>
+    <li style={style} {...attributes}>
       {children}
     </li>
   )
 }
 
 const NumberedList = ({ attributes, children, element }: RenderElementProps) => {
+  const style = getListStyles(element)
+
   return (
-    <ol style={getElementStyles(element)} {...attributes}>
+    <ol style={style} {...attributes}>
       {children}
     </ol>
   )
@@ -62,12 +67,7 @@ const NumberedList = ({ attributes, children, element }: RenderElementProps) => 
 
 const Link = ({ attributes, children, element }: RenderElementProps) => {
   const theme = useComposerTheme()
-
-  const style = {
-    ...getElementStyles(element),
-    color: theme.primaryColor,
-    textDecoration: 'underline',
-  }
+  const style = getLinkStyles(theme.primaryColor, element)
 
   return (
     <EmailLink

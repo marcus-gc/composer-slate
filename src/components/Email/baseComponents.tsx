@@ -7,6 +7,14 @@ import {
   Column,
   Img,
 } from '@react-email/components';
+import {
+  getHeadingStyles,
+  getParagraphStyles,
+  getBlockQuoteStyles,
+  getListStyles,
+  getListItemStyles,
+  getLinkStyles,
+} from '../../plugins/richText-email/sharedEmailStyles';
 
 export interface ElementRendererProps {
   element: any;
@@ -16,78 +24,8 @@ export interface ElementRendererProps {
 
 export type ElementRenderer = (props: ElementRendererProps) => React.ReactNode;
 
-const styles = {
-  h1: {
-    fontSize: '32px',
-    fontWeight: 'bold',
-    marginTop: '0',
-    marginBottom: '16px',
-    lineHeight: '1.2',
-  },
-  h2: {
-    fontSize: '28px',
-    fontWeight: 'bold',
-    marginTop: '0',
-    marginBottom: '14px',
-    lineHeight: '1.3',
-  },
-  h3: {
-    fontSize: '24px',
-    fontWeight: 'bold',
-    marginTop: '0',
-    marginBottom: '12px',
-    lineHeight: '1.4',
-  },
-  h4: {
-    fontSize: '20px',
-    fontWeight: 'bold',
-    marginTop: '0',
-    marginBottom: '10px',
-    lineHeight: '1.4',
-  },
-  h5: {
-    fontSize: '18px',
-    fontWeight: 'bold',
-    marginTop: '0',
-    marginBottom: '8px',
-    lineHeight: '1.4',
-  },
-  h6: {
-    fontSize: '16px',
-    fontWeight: 'bold',
-    marginTop: '0',
-    marginBottom: '8px',
-    lineHeight: '1.4',
-  },
-  paragraph: {
-    fontSize: '16px',
-    lineHeight: '1.6',
-    marginTop: '0',
-    marginBottom: '12px',
-  },
-  list: {
-    fontSize: '16px',
-    lineHeight: '1.6',
-    marginTop: '0',
-    marginBottom: '12px',
-    paddingLeft: '24px',
-  },
-  listItem: {
-    fontSize: '16px',
-    lineHeight: '1.6',
-    marginTop: '0',
-    marginBottom: '4px',
-  },
-  blockquote: {
-    borderLeft: '4px solid #e5e7eb',
-    paddingLeft: '16px',
-    marginLeft: '0',
-    marginRight: '0',
-    marginTop: '0',
-    marginBottom: '12px',
-    fontStyle: 'italic',
-    color: '#6b7280',
-  },
+// Layout-specific styles (not shared with richText-email)
+const layoutStyles = {
   image: {
     maxWidth: '100%',
     height: 'auto',
@@ -104,54 +42,39 @@ const styles = {
   },
 };
 
-// Helper to apply alignment, line height, and font family
-const applyTextStyle = (element: any, baseStyle: any) => {
-  const style = { ...baseStyle };
-  if (element.align) {
-    style.textAlign = element.align;
-  }
-  if (element.lineHeight) {
-    style.lineHeight = element.lineHeight.toString();
-  }
-  if (element.font) {
-    style.fontFamily = element.font;
-  }
-  return style;
-};
-
 export const baseComponents: Record<string, ElementRenderer> = {
   'heading-one': ({ element, children, index }) => (
-    <Heading key={index} as="h1" style={applyTextStyle(element, styles.h1)}>
+    <Heading key={index} as="h1" style={getHeadingStyles(1, element)}>
       {children}
     </Heading>
   ),
 
   'heading-two': ({ element, children, index }) => (
-    <Heading key={index} as="h2" style={applyTextStyle(element, styles.h2)}>
+    <Heading key={index} as="h2" style={getHeadingStyles(2, element)}>
       {children}
     </Heading>
   ),
 
   'heading-three': ({ element, children, index }) => (
-    <Heading key={index} as="h3" style={applyTextStyle(element, styles.h3)}>
+    <Heading key={index} as="h3" style={getHeadingStyles(3, element)}>
       {children}
     </Heading>
   ),
 
   h4: ({ element, children, index }) => (
-    <Heading key={index} as="h4" style={applyTextStyle(element, styles.h4)}>
+    <Heading key={index} as="h4" style={getHeadingStyles(4, element)}>
       {children}
     </Heading>
   ),
 
   h5: ({ element, children, index }) => (
-    <Heading key={index} as="h5" style={applyTextStyle(element, styles.h5)}>
+    <Heading key={index} as="h5" style={getHeadingStyles(5, element)}>
       {children}
     </Heading>
   ),
 
   h6: ({ element, children, index }) => (
-    <Heading key={index} as="h6" style={applyTextStyle(element, styles.h6)}>
+    <Heading key={index} as="h6" style={getHeadingStyles(6, element)}>
       {children}
     </Heading>
   ),
@@ -161,9 +84,10 @@ export const baseComponents: Record<string, ElementRenderer> = {
     if (element.indent && element.listStyleType) {
       const bullet = element.listStyleType === 'disc' ? '•' : '-';
       const indentPx = (element.indent - 1) * 20; // 20px per indent level
+      const style = { ...getListItemStyles(element), marginLeft: `${indentPx}px` };
 
       return (
-        <Text key={index} style={applyTextStyle(element, { ...styles.listItem, marginLeft: `${indentPx}px` })}>
+        <Text key={index} style={style}>
           <span style={{ marginRight: '8px' }}>{bullet}</span>
           {children}
         </Text>
@@ -173,41 +97,42 @@ export const baseComponents: Record<string, ElementRenderer> = {
     // Check if this paragraph has indentation (but not a list)
     if (element.indent && !element.listStyleType) {
       const indentPx = element.indent * 40; // 40px per indent level for regular paragraphs
+      const style = { ...getParagraphStyles(element), marginLeft: `${indentPx}px` };
 
       return (
-        <Text key={index} style={applyTextStyle(element, { ...styles.paragraph, marginLeft: `${indentPx}px` })}>
+        <Text key={index} style={style}>
           {children}
         </Text>
       );
     }
 
     return (
-      <Text key={index} style={applyTextStyle(element, styles.paragraph)}>
+      <Text key={index} style={getParagraphStyles(element)}>
         {children}
       </Text>
     );
   },
 
   'block-quote': ({ element, children, index }) => (
-    <blockquote key={index} style={applyTextStyle(element, styles.blockquote)}>
+    <blockquote key={index} style={getBlockQuoteStyles(element)}>
       {children}
     </blockquote>
   ),
 
   'bulleted-list': ({ element, children, index }) => (
-    <ul key={index} style={applyTextStyle(element, styles.list)}>
+    <ul key={index} style={getListStyles(element)}>
       {children}
     </ul>
   ),
 
   'numbered-list': ({ element, children, index }) => (
-    <ol key={index} style={applyTextStyle(element, styles.list)}>
+    <ol key={index} style={getListStyles(element)}>
       {children}
     </ol>
   ),
 
   'list-item': ({ element, children, index }) => (
-    <li key={index} style={applyTextStyle(element, styles.listItem)}>
+    <li key={index} style={getListItemStyles(element)}>
       {children}
     </li>
   ),
@@ -217,18 +142,18 @@ export const baseComponents: Record<string, ElementRenderer> = {
       key={index}
       src={element.url || ''}
       alt={element.alt || ''}
-      style={styles.image}
+      style={layoutStyles.image}
     />
   ),
 
   'layout-container': ({ element, children, index }) => (
-    <Row key={index} style={{ ...styles.row, ...element }}>
+    <Row key={index} style={{ ...layoutStyles.row, ...element }}>
       {children}
     </Row>
   ),
 
   'layout-column': ({ element, children, index }) => (
-    <Column key={index} style={{ width: element.width || 'auto', ...styles.column }}>
+    <Column key={index} style={{ width: element.width || 'auto', ...layoutStyles.column }}>
       {children}
     </Column>
   ),
@@ -237,7 +162,7 @@ export const baseComponents: Record<string, ElementRenderer> = {
     <Link
       key={index}
       href={element.url || '#'}
-      style={{ color: '#2563eb', textDecoration: 'underline' }}
+      style={getLinkStyles()}
     >
       {children}
     </Link>
@@ -248,7 +173,7 @@ export const baseComponents: Record<string, ElementRenderer> = {
     <Link
       key={index}
       href={element.url || '#'}
-      style={{ color: '#2563eb', textDecoration: 'underline' }}
+      style={getLinkStyles()}
     >
       {children}
     </Link>
