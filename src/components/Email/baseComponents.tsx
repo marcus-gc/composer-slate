@@ -21,6 +21,7 @@ export interface ElementRendererProps {
   element: any;
   children: React.ReactNode;
   index: number;
+  theme?: ComposerTheme;
 }
 
 export type ElementRenderer = (props: ElementRendererProps) => React.ReactNode;
@@ -43,49 +44,44 @@ const layoutStyles = {
   },
 };
 
-/**
- * Creates base email components with optional theme support
- * @param theme - Optional ComposerTheme to apply brand colors
- * @returns Record of element type to renderer function
- */
-export const createBaseComponents = (theme?: ComposerTheme): Record<string, ElementRenderer> => ({
-  'heading-one': ({ element, children, index }) => (
+export const baseComponents: Record<string, ElementRenderer> = {
+  'heading-one': ({ element, children, index, theme }) => (
     <Heading key={index} as="h1" style={getHeadingStyles(1, element, theme)}>
       {children}
     </Heading>
   ),
 
-  'heading-two': ({ element, children, index }) => (
+  'heading-two': ({ element, children, index, theme }) => (
     <Heading key={index} as="h2" style={getHeadingStyles(2, element, theme)}>
       {children}
     </Heading>
   ),
 
-  'heading-three': ({ element, children, index }) => (
+  'heading-three': ({ element, children, index, theme }) => (
     <Heading key={index} as="h3" style={getHeadingStyles(3, element, theme)}>
       {children}
     </Heading>
   ),
 
-  h4: ({ element, children, index }) => (
+  h4: ({ element, children, index, theme }) => (
     <Heading key={index} as="h4" style={getHeadingStyles(4, element, theme)}>
       {children}
     </Heading>
   ),
 
-  h5: ({ element, children, index }) => (
+  h5: ({ element, children, index, theme }) => (
     <Heading key={index} as="h5" style={getHeadingStyles(5, element, theme)}>
       {children}
     </Heading>
   ),
 
-  h6: ({ element, children, index }) => (
+  h6: ({ element, children, index, theme }) => (
     <Heading key={index} as="h6" style={getHeadingStyles(6, element, theme)}>
       {children}
     </Heading>
   ),
 
-  paragraph: ({ element, children, index }) => {
+  paragraph: ({ element, children, index, theme }) => {
     // Check if this is a list item
     if (element.indent && element.listStyleType) {
       const bullet = element.listStyleType === 'disc' ? '•' : '-';
@@ -164,7 +160,7 @@ export const createBaseComponents = (theme?: ComposerTheme): Record<string, Elem
     </Column>
   ),
 
-  link: ({ element, children, index }) => (
+  link: ({ element, children, index, theme }) => (
     <Link
       key={index}
       href={element.url || '#'}
@@ -175,7 +171,7 @@ export const createBaseComponents = (theme?: ComposerTheme): Record<string, Elem
   ),
 
   // Legacy 'a' type support
-  a: ({ element, children, index }) => (
+  a: ({ element, children, index, theme }) => (
     <Link
       key={index}
       href={element.url || '#'}
@@ -184,9 +180,4 @@ export const createBaseComponents = (theme?: ComposerTheme): Record<string, Elem
       {children}
     </Link>
   ),
-});
-
-/**
- * Default base components without theme (for backward compatibility)
- */
-export const baseComponents = createBaseComponents();
+};
