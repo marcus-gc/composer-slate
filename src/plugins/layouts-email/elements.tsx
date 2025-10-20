@@ -21,7 +21,6 @@ const LayoutColumn = ({ attributes, children }: RenderElementProps) => {
     verticalAlign: 'top' as const,
     padding: '0 12px',
     borderRadius: '4px',
-    opacity: 0.3,
   }
 
   const innerStyle = {
