@@ -6,12 +6,14 @@ import {
   Container,
 } from '@react-email/components';
 import { baseComponents, ElementRenderer } from './baseComponents.tsx';
+import type { ComposerTheme } from '../../types';
 
 export interface LetterProps {
   elements: any[];
   components?: Record<string, ElementRenderer>;
   textDirection?: 'ltr' | 'rtl';
   language?: string;
+  theme?: ComposerTheme;
   styles?: {
     body?: React.CSSProperties;
     container?: React.CSSProperties;
@@ -58,7 +60,8 @@ const renderChildren = (
 const renderElement = (
   element: any,
   index: number,
-  components: Record<string, ElementRenderer>
+  components: Record<string, ElementRenderer>,
+  theme?: ComposerTheme
 ): React.ReactNode => {
   const { type, children } = element;
 
@@ -69,22 +72,22 @@ const renderElement = (
     // For container elements, recursively render children
     if (type === 'bulleted-list' || type === 'numbered-list' || type === 'layout-container') {
       const renderedChildren = children?.map((child: any, childIndex: number) =>
-        renderElement(child, childIndex, components)
+        renderElement(child, childIndex, components, theme)
       );
-      return Component({ element, children: renderedChildren, index });
+      return Component({ element, children: renderedChildren, index, theme });
     }
 
     // For layout-column, render its children elements
     if (type === 'layout-column') {
       const renderedChildren = children?.map((child: any, childIndex: number) =>
-        renderElement(child, childIndex, components)
+        renderElement(child, childIndex, components, theme)
       );
-      return Component({ element, children: renderedChildren, index });
+      return Component({ element, children: renderedChildren, index, theme });
     }
 
     // For other elements, render text nodes
-    const content = renderChildren(children, (el, idx) => renderElement(el, idx, components));
-    return Component({ element, children: content, index });
+    const content = renderChildren(children, (el, idx) => renderElement(el, idx, components, theme));
+    return Component({ element, children: content, index, theme });
   }
 
   // Fallback for unknown element types
@@ -110,12 +113,13 @@ export function Letter({
   components = {},
   language = 'en',
   textDirection = 'ltr',
+  theme,
   styles = {
     body: {fontFamily: 'Arial, sans-serif'},
     container: { maxWidth: '600px', margin: '0 auto', padding: '20px' }
   }
 }: LetterProps) {
-  // Merge custom components with defaults
+  // Merge custom components with base components
   const mergedComponents = {
     ...baseComponents,
     ...components,
@@ -126,7 +130,7 @@ export function Letter({
       <Head />
       <Body style={styles?.body}>
         <Container style={styles?.container}>
-          {elements?.map((element, index) => renderElement(element, index, mergedComponents))}
+          {elements?.map((element, index) => renderElement(element, index, mergedComponents, theme))}
         </Container>
       </Body>
     </Html>

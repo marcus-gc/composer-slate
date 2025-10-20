@@ -11,6 +11,11 @@ export { layouts } from './plugins/layouts'
 export { images } from './plugins/images'
 export { blockMenu } from './plugins/blockMenu'
 
+// Email plugins
+export { richTextEmail } from './plugins/richText-email'
+export { layoutsEmail } from './plugins/layouts-email'
+export { imagesEmail } from './plugins/images-email'
+
 export * as Email from './components/Email'
 
 // Types
