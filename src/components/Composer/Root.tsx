@@ -70,7 +70,7 @@ export const Root: React.FC<ComposerRootProps> = ({
         Object.entries(plugin.elements).forEach(([type, config]) => {
           if (config.inline) inlineTypes.add(type)
           if (config.void) voidTypes.add(type)
-          if (config.markableVoid) voidTypes.add(type)
+          if (config.markableVoid) markableVoids.add(type)
         })
       }
     })
