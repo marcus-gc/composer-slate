@@ -21,9 +21,9 @@ export interface LetterProps {
 }
 
   const renderTextNode = (child: any): React.ReactNode => {
-    let text = child.text || '\u00A0';
+    let text = child.text;
 
-    if (!text && !child.type) return null;
+    if (!text && !child.type) return '\u00A0';
 
     // Apply text formatting
     if (child.bold) {
