@@ -95,7 +95,7 @@ export const Root: React.FC<ComposerRootProps> = ({
     if (markableVoids.size > 0) {
         const { markableVoid } = ed
         ed.markableVoid = (element) => {
-            return markableVoids.has((element as any).type) || markableVoid (element)
+            return markableVoids.has((element as any).type) || markableVoid(element)
         }
     }
 
