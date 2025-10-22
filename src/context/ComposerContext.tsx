@@ -1,20 +1,10 @@
 import React, { createContext, useContext } from 'react'
 import { Editor as SlateEditor } from 'slate'
+import type { Plugin } from '../components/Composer/Root'
 
 export interface ComposerContextValue {
   editor: SlateEditor
-  plugins: Array<{
-    elements?: Record<string, {
-      component: any
-      inline?: boolean
-      void?: boolean
-      label?: string
-      showInBlockMenu?: boolean
-    }>
-    leaves?: Record<string, any>
-    utils?: Record<string, (editor: any) => (...args: any[]) => any>
-    provider?: React.ComponentType<{ children: React.ReactNode }>
-  }>
+  plugins: Plugin[]
 
   // Formatting
   toggleMark: (format: string) => void

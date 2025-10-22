@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useMemo } from 'react'
 // @ts-ignore - no types available for is-hotkey
 import * as isHotkeyModule from 'is-hotkey'
 import { Editable, RenderElementProps, RenderLeafProps } from 'slate-react'
@@ -48,23 +48,39 @@ export const Content: React.FC<ComposerContentProps> = ({
 }) => {
   const { toggleMark, plugins } = useComposer()
 
-  const availableElements = plugins.reduce((acc, plugin) => {
-    if (plugin.elements) {
-      return { ...acc, ...plugin.elements }
-    }
-    return acc
-  }, {} as Record<string, any>)
+  const availableElements = useMemo(() => {
+    return plugins.reduce((acc, plugin) => {
+      if (plugin.elements) {
+        return { ...acc, ...plugin.elements }
+      }
+      return acc
+    }, {} as Record<string, any>)
+  }, [plugins])
 
-  const availableLeaves = plugins.reduce((acc, plugin) => {
-    if (plugin.leaves) {
-      return { ...acc, ...plugin.leaves }
-    }
-    return acc
-  }, {} as Record<string, any>)
+  const availableLeaves = useMemo(() => {
+    return plugins.reduce((acc, plugin) => {
+      if (plugin.leaves) {
+        return { ...acc, ...plugin.leaves }
+      }
+      return acc
+    }, {} as Record<string, any>)
+  }, [plugins])
+
+  const elementDecorators = useMemo(() => {
+    return plugins
+      .filter(plugin => plugin.elementDecorator)
+      .map(plugin => plugin.elementDecorator!)
+  }, [plugins])
 
   const renderElement = useCallback(
-    (props: RenderElementProps) => <Element availableElements={availableElements} {...props} />,
-    [availableElements]
+    (props: RenderElementProps) => (
+      <Element
+        availableElements={availableElements}
+        elementDecorators={elementDecorators}
+        {...props}
+      />
+    ),
+    [availableElements, elementDecorators]
   )
 
   const renderLeaf = useCallback(

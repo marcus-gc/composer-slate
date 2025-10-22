@@ -3,6 +3,7 @@
  *
  * Provides:
  * - **Provider**: BlockMenuProvider (state management for menu)
+ * - **ElementDecorator**: BlockMenuWrapper (wraps elements with hover handle)
  * - **Utils**: convertBlock, duplicateBlock, deleteBlock
  *
  * Note: This plugin includes a context provider that wraps the editor
@@ -11,6 +12,7 @@
 
 import { Plugin } from '../../components/Composer/Root'
 import { BlockMenuProvider } from '../../context/BlockMenuContext'
+import { BlockMenuWrapper } from './BlockMenuWrapper'
 
 import {
   convertBlock,
@@ -20,6 +22,7 @@ import {
 
 export const blockMenu: Plugin = {
   provider: BlockMenuProvider,
+  elementDecorator: BlockMenuWrapper,
   utils: {
     convertBlock,
     duplicateBlock,
