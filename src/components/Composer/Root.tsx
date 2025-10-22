@@ -19,6 +19,13 @@ import {
   deleteForward,
 } from '../../utils/editor-utils'
 
+export interface ElementDecoratorProps {
+  element: any
+  children: React.ReactNode
+  attributes: any
+  isInline: boolean
+}
+
 export interface Plugin {
   elements?: Record<string, {
     component: any
@@ -31,6 +38,7 @@ export interface Plugin {
   leaves?: Record<string, any>
   utils?: Record<string, (editor: any) => (...args: any[]) => any>
   provider?: React.ComponentType<{ children: React.ReactNode }> // Optional provider component
+  elementDecorator?: (props: ElementDecoratorProps) => React.ReactNode // Optional element wrapper/decorator
 }
 
 export interface ComposerRootProps {
