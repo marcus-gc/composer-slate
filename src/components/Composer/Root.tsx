@@ -24,6 +24,7 @@ export interface Plugin {
     component: any
     inline?: boolean
     void?: boolean
+    markableVoid?: boolean
     label?: string // Human-readable label for block menu
     showInBlockMenu?: boolean // Whether to show in block menu conversion options
   }>
@@ -62,12 +63,14 @@ export const Root: React.FC<ComposerRootProps> = ({
     // Auto-detect inline and void elements from plugin metadata
     const inlineTypes = new Set<string>()
     const voidTypes = new Set<string>()
+    const markableVoids = new Set<string>()
 
     plugins.forEach((plugin) => {
       if (plugin.elements) {
         Object.entries(plugin.elements).forEach(([type, config]) => {
           if (config.inline) inlineTypes.add(type)
           if (config.void) voidTypes.add(type)
+          if (config.markableVoid) markableVoids.add(type)
         })
       }
     })
@@ -86,6 +89,14 @@ export const Root: React.FC<ComposerRootProps> = ({
       ed.isVoid = (element) => {
         return voidTypes.has((element as any).type) || isVoid(element)
       }
+    }
+
+    // Override markableVoid if we have markable void elements
+    if (markableVoids.size > 0) {
+        const { markableVoid } = ed
+        ed.markableVoid = (element) => {
+            return markableVoids.has((element as any).type) || markableVoid(element)
+        }
     }
 
     return ed
