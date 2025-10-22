@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Descendant } from 'slate'
-import { Composer, richText, layouts, images, blockMenu, richTextEmail, layoutsEmail, imagesEmail, ComposerTheme } from '../../src'
+import { Composer, richText, layouts, images, blockMenu, blockStyling, richTextEmail, layoutsEmail, imagesEmail, ComposerTheme } from '../../src'
 import * as Email from '../../src/components/Email'
 import { render } from '@react-email/render'
 
@@ -67,7 +67,7 @@ function App() {
                 }}
               >
                 <Composer.Root
-                  plugins={[richTextEmail, layoutsEmail, imagesEmail, blockMenu]}
+                  plugins={[richTextEmail, layoutsEmail, imagesEmail, blockMenu, blockStyling]}
                   theme={theme}
                   onChange={(newValue) => {
                     setEmailValue(newValue)
@@ -166,7 +166,7 @@ function App() {
               }}
             >
               <Composer.Root
-                plugins={[richText, layouts, images, blockMenu]}
+                plugins={[richText, layouts, images, blockMenu, blockStyling]}
                 theme={theme}
                 onChange={(newValue) => {
                   setValue(newValue)
