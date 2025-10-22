@@ -41,11 +41,13 @@ const defaultSeparatorStyle: React.CSSProperties = {
 
 export const DefaultBlockMenu: React.FC<DefaultBlockMenuProps> = ({ className = '', style }) => {
   const { isOpen, blockPath, closeMenu } = useBlockMenu()
-  const { editor, plugins, convertBlock, duplicateBlock, deleteBlock } = useComposer()
+  const composerContext = useComposer()
+  const { editor, plugins, convertBlock, duplicateBlock, deleteBlock } = composerContext
   const theme = useComposerTheme()
   const menuRef = useRef<HTMLDivElement>(null)
   const [position, setPosition] = React.useState<{ top: number; left: number } | null>(null)
   const [hoveredItem, setHoveredItem] = React.useState<string | null>(null)
+  const [showStyleInputs, setShowStyleInputs] = React.useState(false)
 
   // Get available block types from plugins
   const availableBlockTypes = useMemo(() => {
@@ -78,6 +80,21 @@ export const DefaultBlockMenu: React.FC<DefaultBlockMenuProps> = ({ className = 
     }
     return null
   }, [editor, blockPath, isOpen])
+
+  // Check if blockStyling plugin is available
+  const hasBlockStyling = useMemo(() => {
+    return composerContext.setPadding !== undefined
+  }, [composerContext])
+
+  // Get current block styles
+  const currentBlockStyles = useMemo(() => {
+    if (!hasBlockStyling || !blockPath || !isOpen) return {}
+    try {
+      return composerContext.getBlockStyles?.() || {}
+    } catch (e) {
+      return {}
+    }
+  }, [composerContext, hasBlockStyling, blockPath, isOpen])
 
   // Calculate position based on block element
   useEffect(() => {
@@ -141,6 +158,31 @@ export const DefaultBlockMenu: React.FC<DefaultBlockMenuProps> = ({ className = 
     closeMenu()
   }
 
+  const handleStyleChange = (property: string, value: string) => {
+    if (!hasBlockStyling) return
+
+    const setters: Record<string, any> = {
+      padding: composerContext.setPadding,
+      margin: composerContext.setMargin,
+      backgroundColor: composerContext.setBackgroundColor,
+      border: composerContext.setBorder,
+      borderRadius: composerContext.setBorderRadius,
+      width: composerContext.setWidth,
+      maxWidth: composerContext.setMaxWidth,
+    }
+
+    const setter = setters[property]
+    if (setter) {
+      setter(value)
+    }
+  }
+
+  const handleClearStyles = () => {
+    if (!hasBlockStyling) return
+    composerContext.clearBlockStyles?.()
+    setShowStyleInputs(false)
+  }
+
   const itemHoverStyle = createItemHoverStyle(theme.primaryColor)
   const activeItemStyle = { backgroundColor: `${theme.primaryColor}20` }
 
@@ -180,6 +222,186 @@ export const DefaultBlockMenu: React.FC<DefaultBlockMenuProps> = ({ className = 
               {currentBlockType === type && <span style={{ marginLeft: '8px', color: theme.primaryColor }}>✓</span>}
             </div>
           ))}
+          <div style={defaultSeparatorStyle} />
+        </>
+      )}
+
+      {/* Block Styling section */}
+      {hasBlockStyling && (
+        <>
+          <div style={defaultSeparatorStyle} />
+          <div
+            style={{
+              ...defaultItemStyle,
+              ...(hoveredItem === 'style' ? itemHoverStyle : {}),
+            }}
+            onMouseEnter={() => setHoveredItem('style')}
+            onMouseLeave={() => setHoveredItem(null)}
+            onMouseDown={(e) => {
+              e.preventDefault()
+              setShowStyleInputs(!showStyleInputs)
+            }}
+          >
+            Style Block {showStyleInputs ? '▼' : '▶'}
+          </div>
+
+          {showStyleInputs && (
+            <div style={{ padding: '8px 12px', fontSize: '12px' }}>
+              {/* Padding */}
+              <label style={{ display: 'block', marginBottom: '4px', color: theme.textColor, opacity: 0.8 }}>
+                Padding:
+              </label>
+              <input
+                type="text"
+                placeholder="e.g., 16px or 8px 16px"
+                value={currentBlockStyles.padding || ''}
+                onChange={(e) => handleStyleChange('padding', e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '4px 8px',
+                  marginBottom: '8px',
+                  borderRadius: '4px',
+                  border: '1px solid #e0e0e0',
+                  fontSize: '12px',
+                }}
+              />
+
+              {/* Margin */}
+              <label style={{ display: 'block', marginBottom: '4px', color: theme.textColor, opacity: 0.8 }}>
+                Margin:
+              </label>
+              <input
+                type="text"
+                placeholder="e.g., 0 auto or 16px 0"
+                value={currentBlockStyles.margin || ''}
+                onChange={(e) => handleStyleChange('margin', e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '4px 8px',
+                  marginBottom: '8px',
+                  borderRadius: '4px',
+                  border: '1px solid #e0e0e0',
+                  fontSize: '12px',
+                }}
+              />
+
+              {/* Background Color */}
+              <label style={{ display: 'block', marginBottom: '4px', color: theme.textColor, opacity: 0.8 }}>
+                Background:
+              </label>
+              <input
+                type="text"
+                placeholder="e.g., #f0f0f0"
+                value={currentBlockStyles.backgroundColor || ''}
+                onChange={(e) => handleStyleChange('backgroundColor', e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '4px 8px',
+                  marginBottom: '8px',
+                  borderRadius: '4px',
+                  border: '1px solid #e0e0e0',
+                  fontSize: '12px',
+                }}
+              />
+
+              {/* Border */}
+              <label style={{ display: 'block', marginBottom: '4px', color: theme.textColor, opacity: 0.8 }}>
+                Border:
+              </label>
+              <input
+                type="text"
+                placeholder="e.g., 1px solid #ccc"
+                value={currentBlockStyles.border || ''}
+                onChange={(e) => handleStyleChange('border', e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '4px 8px',
+                  marginBottom: '8px',
+                  borderRadius: '4px',
+                  border: '1px solid #e0e0e0',
+                  fontSize: '12px',
+                }}
+              />
+
+              {/* Border Radius */}
+              <label style={{ display: 'block', marginBottom: '4px', color: theme.textColor, opacity: 0.8 }}>
+                Border Radius:
+              </label>
+              <input
+                type="text"
+                placeholder="e.g., 8px"
+                value={currentBlockStyles.borderRadius || ''}
+                onChange={(e) => handleStyleChange('borderRadius', e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '4px 8px',
+                  marginBottom: '8px',
+                  borderRadius: '4px',
+                  border: '1px solid #e0e0e0',
+                  fontSize: '12px',
+                }}
+              />
+
+              {/* Width */}
+              <label style={{ display: 'block', marginBottom: '4px', color: theme.textColor, opacity: 0.8 }}>
+                Width:
+              </label>
+              <input
+                type="text"
+                placeholder="e.g., 600px or 100%"
+                value={currentBlockStyles.width || ''}
+                onChange={(e) => handleStyleChange('width', e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '4px 8px',
+                  marginBottom: '8px',
+                  borderRadius: '4px',
+                  border: '1px solid #e0e0e0',
+                  fontSize: '12px',
+                }}
+              />
+
+              {/* Max Width */}
+              <label style={{ display: 'block', marginBottom: '4px', color: theme.textColor, opacity: 0.8 }}>
+                Max Width:
+              </label>
+              <input
+                type="text"
+                placeholder="e.g., 600px"
+                value={currentBlockStyles.maxWidth || ''}
+                onChange={(e) => handleStyleChange('maxWidth', e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '4px 8px',
+                  marginBottom: '8px',
+                  borderRadius: '4px',
+                  border: '1px solid #e0e0e0',
+                  fontSize: '12px',
+                }}
+              />
+
+              {/* Clear Styles Button */}
+              <button
+                onMouseDown={(e) => {
+                  e.preventDefault()
+                  handleClearStyles()
+                }}
+                style={{
+                  width: '100%',
+                  padding: '6px',
+                  marginTop: '4px',
+                  borderRadius: '4px',
+                  border: '1px solid #e0e0e0',
+                  backgroundColor: theme.backgroundColor,
+                  color: '#d32f2f',
+                  fontSize: '12px',
+                  cursor: 'pointer',
+                }}
+              >
+                Clear All Styles
+              </button>
+            </div>
+          )}
           <div style={defaultSeparatorStyle} />
         </>
       )}
