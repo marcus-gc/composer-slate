@@ -92,8 +92,8 @@ const renderElement = (
       rendered = Component({ element, children: content, index, theme });
     }
 
-    // Wrap with block styles if present
-    if (hasBlockStyles(element)) {
+    // Wrap with block styles if present (but skip layout elements)
+    if (hasBlockStyles(element) && type !== 'layout-container' && type !== 'layout-column') {
       const blockStyles = getBlockStyles(element);
       return (
         <div key={index} style={blockStyles}>

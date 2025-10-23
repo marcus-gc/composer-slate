@@ -22,6 +22,12 @@ export const BlockStylingWrapper = ({
     return <>{children}</>
   }
 
+  // Don't wrap layout elements (they handle their own styling)
+  const elementType = (element as any).type
+  if (elementType === 'layout-container' || elementType === 'layout-column') {
+    return <>{children}</>
+  }
+
   // Only wrap if element has block styles
   if (!hasBlockStyles(element)) {
     return <>{children}</>
