@@ -36,6 +36,7 @@ export interface Plugin {
     markableVoid?: boolean
     label?: string // Human-readable label for block menu
     showInBlockMenu?: boolean // Whether to show in block menu conversion options
+    hideBlockMenu?: boolean // Whether to hide block menu for this element
   }>
   leaves?: Record<string, any>
   utils?: Record<string, (editor: any) => (...args: any[]) => any>

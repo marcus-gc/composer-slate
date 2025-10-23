@@ -26,18 +26,27 @@ export interface LetterProps {
 
     if (!text && !child.type) return '\u00A0';
 
+    // Convert newlines to <br> tags for HTML/email rendering
+    const textParts = text.split('\n');
+    let formattedText: React.ReactNode = textParts.map((part: string, index: number) => (
+      <React.Fragment key={index}>
+        {part}
+        {index < textParts.length - 1 && <br />}
+      </React.Fragment>
+    ));
+
     // Apply text formatting
     if (child.bold) {
-      text = <strong key={Math.random()}>{text}</strong>;
+      formattedText = <strong key={Math.random()}>{formattedText}</strong>;
     }
     if (child.italic) {
-      text = <em key={Math.random()}>{text}</em>;
+      formattedText = <em key={Math.random()}>{formattedText}</em>;
     }
     if (child.underline) {
-      text = <u key={Math.random()}>{text}</u>;
+      formattedText = <u key={Math.random()}>{formattedText}</u>;
     }
 
-    return text;
+    return formattedText;
   };
 
 const renderChildren = (
