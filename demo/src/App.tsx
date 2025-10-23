@@ -1,14 +1,32 @@
-import { useState, useEffect } from 'react'
-import { Descendant } from 'slate'
+import { useState, useEffect, useRef } from 'react'
+import { Descendant, Transforms, Editor } from 'slate'
 import { Composer, richText, layouts, images, blockMenu, blockStyling, richTextEmail, layoutsEmail, imagesEmail, ComposerTheme } from '../../src'
+import { useComposer } from '../../src/context/ComposerContext'
 import * as Email from '../../src/components/Email'
 import { render } from '@react-email/render'
+
+// Helper component to expose editor instance via ref
+const EditorRef = ({ editorRef }: { editorRef: React.MutableRefObject<Editor | null> }) => {
+  const { editor } = useComposer()
+  editorRef.current = editor
+  return null
+}
 
 function App() {
   const [value, setValue] = useState<Descendant[]>()
   const [emailHtml, setEmailHtml] = useState<string>('');
   const [emailValue, setEmailValue] = useState<Descendant[]>()
   const [emailPluginsHtml, setEmailPluginsHtml] = useState<string>('');
+
+  // JSON editing state
+  const [emailJsonText, setEmailJsonText] = useState<string>('');
+  const [standardJsonText, setStandardJsonText] = useState<string>('');
+  const [emailJsonError, setEmailJsonError] = useState<string>('');
+  const [standardJsonError, setStandardJsonError] = useState<string>('');
+
+  // Editor refs to access editor instances
+  const emailEditorRef = useRef<Editor | null>(null);
+  const standardEditorRef = useRef<Editor | null>(null);
 
   // Example theme - you can customize these values
   const theme: ComposerTheme = {
@@ -18,17 +36,87 @@ function App() {
     fontFamily: 'Inter, -apple-system, sans-serif',
   };
 
+  // Sync editor changes to JSON text
   useEffect(() => {
     if (value && value.length > 0) {
       render(<Email.Letter elements={value} theme={theme} />).then(setEmailHtml);
+      setStandardJsonText(JSON.stringify(value, null, 2));
     }
   }, [value])
 
   useEffect(() => {
     if (emailValue && emailValue.length > 0) {
       render(<Email.Letter elements={emailValue} theme={theme} />).then(setEmailPluginsHtml);
+      setEmailJsonText(JSON.stringify(emailValue, null, 2));
     }
   }, [emailValue])
+
+  // Handle JSON blur with validation - uses Transforms to update editor
+  const handleEmailJsonBlur = () => {
+    try {
+      const parsed = JSON.parse(emailJsonText) as Descendant[];
+
+      // Use Transforms to replace editor contents
+      if (emailEditorRef.current) {
+        const editor = emailEditorRef.current;
+
+        // Remove all existing content
+        Transforms.delete(editor, {
+          at: {
+            anchor: Editor.start(editor, []),
+            focus: Editor.end(editor, []),
+          },
+        });
+
+        // Remove the empty paragraph that remains
+        Transforms.removeNodes(editor, {
+          at: [0],
+        });
+
+        // Insert new content
+        Transforms.insertNodes(editor, parsed, { at: [0] });
+
+        setEmailValue(parsed);
+      }
+
+      setEmailJsonError('');
+    } catch (error) {
+      setEmailJsonError(error instanceof Error ? error.message : 'Invalid JSON');
+    }
+  };
+
+  const handleStandardJsonBlur = () => {
+    try {
+      const parsed = JSON.parse(standardJsonText) as Descendant[];
+
+      // Use Transforms to replace editor contents
+      if (standardEditorRef.current) {
+        const editor = standardEditorRef.current;
+
+        // Remove all existing content
+        Transforms.delete(editor, {
+          at: {
+            anchor: Editor.start(editor, []),
+            focus: Editor.end(editor, []),
+          },
+        });
+
+        // Remove the empty paragraph that remains
+        Transforms.removeNodes(editor, {
+          at: [0],
+        });
+
+        // Insert new content
+        Transforms.insertNodes(editor, parsed, { at: [0] });
+
+        setValue(parsed);
+      }
+
+      setStandardJsonError('');
+    } catch (error) {
+      setStandardJsonError(error instanceof Error ? error.message : 'Invalid JSON');
+    }
+  };
 
   return (
     <div style={{ padding: '40px 20px' }}>
@@ -57,7 +145,7 @@ function App() {
               <div style={{ gridColumn: 'span 1' }}>
                   <h3 style={{ fontSize: '18px', marginBottom: '15px', fontWeight: '600' }}>JSON Output</h3>
                   <p style={{ marginBottom: '15px', color: '#777', fontSize: '14px' }}>
-                      The email editor's data structure.
+                      The email editor's data structure. Edit and blur to update the editor.
                   </p>
                   <div
                       style={{
@@ -69,17 +157,28 @@ function App() {
                           overflow: 'auto',
                       }}
                   >
-                <pre
+                <textarea
+                    value={emailJsonText}
+                    onChange={(e) => setEmailJsonText(e.target.value)}
+                    onBlur={handleEmailJsonBlur}
                     style={{
+                        width: '100%',
+                        height: '100%',
                         background: '#f5f5f5',
                         padding: '15px',
                         borderRadius: '4px',
                         fontSize: '12px',
                         margin: 0,
+                        border: emailJsonError ? '2px solid #ef4444' : '1px solid #e0e0e0',
+                        fontFamily: 'monospace',
+                        resize: 'none',
                     }}
-                >
-                  {JSON.stringify(emailValue, null, 2)}
-                </pre>
+                />
+                {emailJsonError && (
+                  <div style={{ color: '#ef4444', fontSize: '12px', marginTop: '8px' }}>
+                    Error: {emailJsonError}
+                  </div>
+                )}
                   </div>
               </div>
             {/* Email Editor Column */}
@@ -104,6 +203,7 @@ function App() {
                     console.log('Email editor changed:', newValue)
                   }}
                 >
+                  <EditorRef editorRef={emailEditorRef} />
                   <Composer.DefaultToolbar />
                   <Composer.BlockMenu />
                   <Composer.Content placeholder="Start typing with email plugins..." />
@@ -156,7 +256,7 @@ function App() {
             <div style={{ gridColumn: 'span 1' }}>
                 <h3 style={{ fontSize: '18px', marginBottom: '15px', fontWeight: '600' }}>JSON Output</h3>
                 <p style={{ marginBottom: '15px', color: '#777', fontSize: '14px' }}>
-                    The editor's data structure.
+                    The editor's data structure. Edit and blur to update the editor.
                 </p>
                 <div
                     style={{
@@ -168,17 +268,28 @@ function App() {
                         overflow: 'auto',
                     }}
                 >
-              <pre
+              <textarea
+                  value={standardJsonText}
+                  onChange={(e) => setStandardJsonText(e.target.value)}
+                  onBlur={handleStandardJsonBlur}
                   style={{
+                      width: '100%',
+                      height: '100%',
                       background: '#f5f5f5',
                       padding: '15px',
                       borderRadius: '4px',
                       fontSize: '12px',
                       margin: 0,
+                      border: standardJsonError ? '2px solid #ef4444' : '1px solid #e0e0e0',
+                      fontFamily: 'monospace',
+                      resize: 'none',
                   }}
-              >
-                {JSON.stringify(value, null, 2)}
-              </pre>
+              />
+              {standardJsonError && (
+                <div style={{ color: '#ef4444', fontSize: '12px', marginTop: '8px' }}>
+                  Error: {standardJsonError}
+                </div>
+              )}
                 </div>
             </div>
 
@@ -204,6 +315,7 @@ function App() {
                   console.log('Editor changed:', newValue)
                 }}
               >
+                <EditorRef editorRef={standardEditorRef} />
                 <Composer.DefaultToolbar />
                 <Composer.BlockMenu />
                 <Composer.Content placeholder="Start typing..." />
