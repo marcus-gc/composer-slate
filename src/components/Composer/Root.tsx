@@ -24,6 +24,8 @@ export interface ElementDecoratorProps {
   children: React.ReactNode
   attributes: any
   isInline: boolean
+  hideBlockMenu: boolean
+  isVoid: boolean
 }
 
 export interface Plugin {

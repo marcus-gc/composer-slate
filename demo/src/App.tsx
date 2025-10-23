@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Descendant } from 'slate'
-import { Composer, richText, layouts, images, blockMenu, richTextEmail, layoutsEmail, imagesEmail, ComposerTheme } from '../../src'
+import { Composer, richText, layouts, images, blockMenu, blockStyling, richTextEmail, layoutsEmail, imagesEmail, ComposerTheme } from '../../src'
 import * as Email from '../../src/components/Email'
 import { render } from '@react-email/render'
 
@@ -52,6 +52,36 @@ function App() {
               marginBottom: '20px',
             }}
           >
+
+              {/* Email JSON Column */}
+              <div style={{ gridColumn: 'span 1' }}>
+                  <h3 style={{ fontSize: '18px', marginBottom: '15px', fontWeight: '600' }}>JSON Output</h3>
+                  <p style={{ marginBottom: '15px', color: '#777', fontSize: '14px' }}>
+                      The email editor's data structure.
+                  </p>
+                  <div
+                      style={{
+                          border: '1px solid #e0e0e0',
+                          borderRadius: '8px',
+                          padding: '20px',
+                          background: '#fafafa',
+                          height: '400px',
+                          overflow: 'auto',
+                      }}
+                  >
+                <pre
+                    style={{
+                        background: '#f5f5f5',
+                        padding: '15px',
+                        borderRadius: '4px',
+                        fontSize: '12px',
+                        margin: 0,
+                    }}
+                >
+                  {JSON.stringify(emailValue, null, 2)}
+                </pre>
+                  </div>
+              </div>
             {/* Email Editor Column */}
             <div style={{ gridColumn: 'span 1' }}>
               <h3 style={{ fontSize: '18px', marginBottom: '15px', fontWeight: '600' }}>Email Editor</h3>
@@ -67,7 +97,7 @@ function App() {
                 }}
               >
                 <Composer.Root
-                  plugins={[richTextEmail, layoutsEmail, imagesEmail, blockMenu]}
+                  plugins={[richTextEmail, layoutsEmail, imagesEmail, blockMenu, blockStyling]}
                   theme={theme}
                   onChange={(newValue) => {
                     setEmailValue(newValue)
@@ -78,36 +108,6 @@ function App() {
                   <Composer.BlockMenu />
                   <Composer.Content placeholder="Start typing with email plugins..." />
                 </Composer.Root>
-              </div>
-            </div>
-
-            {/* Email JSON Column */}
-            <div style={{ gridColumn: 'span 1' }}>
-              <h3 style={{ fontSize: '18px', marginBottom: '15px', fontWeight: '600' }}>JSON Output</h3>
-              <p style={{ marginBottom: '15px', color: '#777', fontSize: '14px' }}>
-                The email editor's data structure.
-              </p>
-              <div
-                style={{
-                  border: '1px solid #e0e0e0',
-                  borderRadius: '8px',
-                  padding: '20px',
-                  background: '#fafafa',
-                  height: '400px',
-                  overflow: 'auto',
-                }}
-              >
-                <pre
-                  style={{
-                    background: '#f5f5f5',
-                    padding: '15px',
-                    borderRadius: '4px',
-                    fontSize: '12px',
-                    margin: 0,
-                  }}
-                >
-                  {JSON.stringify(emailValue, null, 2)}
-                </pre>
               </div>
             </div>
 
@@ -151,7 +151,38 @@ function App() {
             marginBottom: '40px',
           }}
         >
-          {/* Editor Column */}
+
+            {/* JSON Column */}
+            <div style={{ gridColumn: 'span 1' }}>
+                <h3 style={{ fontSize: '18px', marginBottom: '15px', fontWeight: '600' }}>JSON Output</h3>
+                <p style={{ marginBottom: '15px', color: '#777', fontSize: '14px' }}>
+                    The editor's data structure.
+                </p>
+                <div
+                    style={{
+                        border: '1px solid #e0e0e0',
+                        borderRadius: '8px',
+                        padding: '20px',
+                        background: '#fafafa',
+                        height: '500px',
+                        overflow: 'auto',
+                    }}
+                >
+              <pre
+                  style={{
+                      background: '#f5f5f5',
+                      padding: '15px',
+                      borderRadius: '4px',
+                      fontSize: '12px',
+                      margin: 0,
+                  }}
+              >
+                {JSON.stringify(value, null, 2)}
+              </pre>
+                </div>
+            </div>
+
+            {/* Editor Column */}
           <div style={{ gridColumn: 'span 1' }}>
             <h3 style={{ fontSize: '18px', marginBottom: '15px', fontWeight: '600' }}>Editor</h3>
             <p style={{ marginBottom: '15px', color: '#777', fontSize: '14px' }}>
@@ -166,7 +197,7 @@ function App() {
               }}
             >
               <Composer.Root
-                plugins={[richText, layouts, images, blockMenu]}
+                plugins={[richText, layouts, images, blockMenu, blockStyling]}
                 theme={theme}
                 onChange={(newValue) => {
                   setValue(newValue)
@@ -177,36 +208,6 @@ function App() {
                 <Composer.BlockMenu />
                 <Composer.Content placeholder="Start typing..." />
               </Composer.Root>
-            </div>
-          </div>
-
-          {/* JSON Column */}
-          <div style={{ gridColumn: 'span 1' }}>
-            <h3 style={{ fontSize: '18px', marginBottom: '15px', fontWeight: '600' }}>JSON Output</h3>
-            <p style={{ marginBottom: '15px', color: '#777', fontSize: '14px' }}>
-              The editor's data structure.
-            </p>
-            <div
-              style={{
-                border: '1px solid #e0e0e0',
-                borderRadius: '8px',
-                padding: '20px',
-                background: '#fafafa',
-                height: '500px',
-                overflow: 'auto',
-              }}
-            >
-              <pre
-                style={{
-                  background: '#f5f5f5',
-                  padding: '15px',
-                  borderRadius: '4px',
-                  fontSize: '12px',
-                  margin: 0,
-                }}
-              >
-                {JSON.stringify(value, null, 2)}
-              </pre>
             </div>
           </div>
 

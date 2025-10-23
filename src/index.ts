@@ -10,6 +10,7 @@ export { richText } from './plugins/richText'
 export { layouts } from './plugins/layouts'
 export { images } from './plugins/images'
 export { blockMenu } from './plugins/blockMenu'
+export { blockStyling } from './plugins/blockStyling'
 
 // Email plugins
 export { richTextEmail } from './plugins/richText-email'
@@ -37,6 +38,8 @@ export type {
   ImageElement,
   FormattedText,
   ComposerTheme,
+  ElementStyles,
+  BlockStyles,
 } from './types'
 
 export type {

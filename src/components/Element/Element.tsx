@@ -11,7 +11,7 @@ const Paragraph = ({ attributes, children, element }: RenderElementProps) => {
 }
 
 type ComposerElementProps = RenderElementProps & {
-    availableElements: Record<string, { component: any; inline?: boolean; void?: boolean }>
+    availableElements: Record<string, { component: any; inline?: boolean; void?: boolean, showInBlockMenu?: boolean; hideBlockMenu?: boolean }>
     elementDecorators: Array<(props: ElementDecoratorProps) => React.ReactNode>
 }
 
@@ -25,6 +25,8 @@ const Element = ({
     const elementConfig = availableElements[element.type]
     const ElementToRender = elementConfig?.component || Paragraph
     const isInline = elementConfig?.inline || false
+    const isVoid = elementConfig?.void || false
+    const hideBlockMenu = elementConfig?.hideBlockMenu || false
 
     // Render the element component
     let rendered = (
@@ -32,6 +34,9 @@ const Element = ({
             attributes={attributes}
             children={children}
             element={element}
+            isInline={isInline}
+            isVoid={isVoid}
+            hideBlockMenu={hideBlockMenu}
         />
     )
 
@@ -43,6 +48,8 @@ const Element = ({
             children: wrappedElement,
             attributes,
             isInline,
+            isVoid,
+            hideBlockMenu,
         }) as React.ReactElement
     }, rendered)
 

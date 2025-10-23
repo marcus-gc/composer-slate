@@ -7,6 +7,7 @@ import {
 } from '@react-email/components';
 import { baseComponents, ElementRenderer } from './baseComponents.tsx';
 import type { ComposerTheme } from '../../types';
+import { getBlockStyles, hasBlockStyles } from '../../plugins/blockStyling/sharedBlockStyles';
 
 export interface LetterProps {
   elements: any[];
@@ -69,25 +70,39 @@ const renderElement = (
   const Component = components[type];
 
   if (Component) {
+    let rendered: React.ReactNode;
+
     // For container elements, recursively render children
     if (type === 'bulleted-list' || type === 'numbered-list' || type === 'layout-container') {
       const renderedChildren = children?.map((child: any, childIndex: number) =>
         renderElement(child, childIndex, components, theme)
       );
-      return Component({ element, children: renderedChildren, index, theme });
+      rendered = Component({ element, children: renderedChildren, index, theme });
     }
-
     // For layout-column, render its children elements
-    if (type === 'layout-column') {
+    else if (type === 'layout-column') {
       const renderedChildren = children?.map((child: any, childIndex: number) =>
         renderElement(child, childIndex, components, theme)
       );
-      return Component({ element, children: renderedChildren, index, theme });
+      rendered = Component({ element, children: renderedChildren, index, theme });
+    }
+    // For other elements, render text nodes
+    else {
+      const content = renderChildren(children, (el, idx) => renderElement(el, idx, components, theme));
+      rendered = Component({ element, children: content, index, theme });
     }
 
-    // For other elements, render text nodes
-    const content = renderChildren(children, (el, idx) => renderElement(el, idx, components, theme));
-    return Component({ element, children: content, index, theme });
+    // Wrap with block styles if present (but skip layout elements)
+    if (hasBlockStyles(element) && type !== 'layout-container' && type !== 'layout-column') {
+      const blockStyles = getBlockStyles(element);
+      return (
+        <div key={index} style={blockStyles}>
+          {rendered}
+        </div>
+      );
+    }
+
+    return rendered;
   }
 
   // Fallback for unknown element types

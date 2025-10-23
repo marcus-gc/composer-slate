@@ -7,7 +7,8 @@ import { ElementDecoratorProps } from '../../components/Composer/Root'
 export const BlockMenuWrapper = ({
   element,
   children,
-  isInline
+  isInline,
+  hideBlockMenu,
 }: ElementDecoratorProps) => {
   const editor = useSlateStatic()
   const [isHovered, setIsHovered] = useState(false)
@@ -30,7 +31,7 @@ export const BlockMenuWrapper = ({
   }
 
   // Don't wrap inline elements or elements with hideBlockMenu
-  if (isInline || (element as any).hideBlockMenu) {
+  if (isInline || hideBlockMenu) {
     return <>{children}</>
   }
 
