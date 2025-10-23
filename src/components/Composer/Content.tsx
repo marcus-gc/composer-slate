@@ -2,6 +2,7 @@ import React, { useCallback, useMemo } from 'react'
 // @ts-ignore - no types available for is-hotkey
 import * as isHotkeyModule from 'is-hotkey'
 import { Editable, RenderElementProps, RenderLeafProps } from 'slate-react'
+import { Editor } from 'slate'
 import { useComposer } from '../../context/ComposerContext'
 import Element from '../Element'
 import Leaf from '../Leaf'
@@ -46,7 +47,7 @@ export const Content: React.FC<ComposerContentProps> = ({
   autoFocus = false,
   readOnly = false,
 }) => {
-  const { toggleMark, plugins } = useComposer()
+  const { editor, toggleMark, plugins } = useComposer()
 
   const availableElements = useMemo(() => {
     return plugins.reduce((acc, plugin) => {
@@ -98,6 +99,14 @@ export const Content: React.FC<ComposerContentProps> = ({
       autoFocus={autoFocus}
       readOnly={readOnly}
       onKeyDown={(event) => {
+        // Handle Shift+Enter for soft line break (newline within block)
+        if (event.key === 'Enter' && event.shiftKey) {
+          event.preventDefault()
+          Editor.insertText(editor, '\n')
+          return
+        }
+
+        // Handle formatting hotkeys
         for (const hotkey in HOTKEYS) {
           if (isHotkey(hotkey, event as any)) {
             event.preventDefault()
