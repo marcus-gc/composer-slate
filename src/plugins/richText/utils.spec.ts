@@ -18,6 +18,12 @@ describe('richText utils', () => {
 
   beforeEach(() => {
     editor = withReact(createEditor())
+
+    // Configure editor to recognize inline elements (like link)
+    const { isInline } = editor
+    editor.isInline = (element) => {
+      return (element as any).type === 'link' || isInline(element)
+    }
   })
 
   const createInitialValue = (properties?: Record<string, any>): Descendant[] => [
@@ -42,13 +48,13 @@ describe('richText utils', () => {
 
       setLineHeight(editor)('1.5')
 
-      const [node] = Array.from(
-        SlateEditor.nodes(editor, {
-          match: (n) => !SlateEditor.isEditor(n) && 'type' in n,
-        })
-      )
-
-      expect((node[0] as any).lineHeight).toBe('1.5')
+      expect(editor.children).toEqual([
+        {
+          type: 'paragraph',
+          lineHeight: '1.5',
+          children: [{ text: 'Test content' }],
+        },
+      ])
     })
 
     it('should update line height value', () => {
@@ -57,13 +63,13 @@ describe('richText utils', () => {
 
       setLineHeight(editor)('2.0')
 
-      const [node] = Array.from(
-        SlateEditor.nodes(editor, {
-          match: (n) => !SlateEditor.isEditor(n) && 'type' in n,
-        })
-      )
-
-      expect((node[0] as any).lineHeight).toBe('2.0')
+      expect(editor.children).toEqual([
+        {
+          type: 'paragraph',
+          lineHeight: '2.0',
+          children: [{ text: 'Test content' }],
+        },
+      ])
     })
 
     it('should clear line height when set to undefined', () => {
@@ -72,26 +78,30 @@ describe('richText utils', () => {
 
       setLineHeight(editor)(undefined)
 
-      const [node] = Array.from(
-        SlateEditor.nodes(editor, {
-          match: (n) => !SlateEditor.isEditor(n) && 'type' in n,
-        })
-      )
-
-      expect((node[0] as any).lineHeight).toBeUndefined()
+      expect(editor.children).toEqual([
+        {
+          type: 'paragraph',
+          lineHeight: undefined,
+          children: [{ text: 'Test content' }],
+        },
+      ])
     })
 
-    it('should validate output structure with lineHeight property', () => {
-      editor.children = createInitialValue()
+    it('should preserve other properties when setting lineHeight', () => {
+      editor.children = createInitialValue({ font: 'Arial', align: 'center' })
       selectEditor()
 
       setLineHeight(editor)('1.8')
 
-      expect(editor.children[0]).toMatchObject({
-        type: 'paragraph',
-        lineHeight: '1.8',
-        children: [{ text: 'Test content' }],
-      })
+      expect(editor.children).toEqual([
+        {
+          type: 'paragraph',
+          font: 'Arial',
+          align: 'center',
+          lineHeight: '1.8',
+          children: [{ text: 'Test content' }],
+        },
+      ])
     })
   })
 
@@ -142,13 +152,13 @@ describe('richText utils', () => {
 
       setFont(editor)('Arial')
 
-      const [node] = Array.from(
-        SlateEditor.nodes(editor, {
-          match: (n) => !SlateEditor.isEditor(n) && 'type' in n,
-        })
-      )
-
-      expect((node[0] as any).font).toBe('Arial')
+      expect(editor.children).toEqual([
+        {
+          type: 'paragraph',
+          font: 'Arial',
+          children: [{ text: 'Test content' }],
+        },
+      ])
     })
 
     it('should update font family value', () => {
@@ -157,13 +167,13 @@ describe('richText utils', () => {
 
       setFont(editor)('Georgia')
 
-      const [node] = Array.from(
-        SlateEditor.nodes(editor, {
-          match: (n) => !SlateEditor.isEditor(n) && 'type' in n,
-        })
-      )
-
-      expect((node[0] as any).font).toBe('Georgia')
+      expect(editor.children).toEqual([
+        {
+          type: 'paragraph',
+          font: 'Georgia',
+          children: [{ text: 'Test content' }],
+        },
+      ])
     })
 
     it('should clear font when set to undefined', () => {
@@ -172,26 +182,30 @@ describe('richText utils', () => {
 
       setFont(editor)(undefined)
 
-      const [node] = Array.from(
-        SlateEditor.nodes(editor, {
-          match: (n) => !SlateEditor.isEditor(n) && 'type' in n,
-        })
-      )
-
-      expect((node[0] as any).font).toBeUndefined()
+      expect(editor.children).toEqual([
+        {
+          type: 'paragraph',
+          font: undefined,
+          children: [{ text: 'Test content' }],
+        },
+      ])
     })
 
-    it('should validate output structure with font property', () => {
-      editor.children = createInitialValue()
+    it('should preserve other properties when setting font', () => {
+      editor.children = createInitialValue({ lineHeight: '1.5', indent: 2 })
       selectEditor()
 
       setFont(editor)('Times New Roman')
 
-      expect(editor.children[0]).toMatchObject({
-        type: 'paragraph',
-        font: 'Times New Roman',
-        children: [{ text: 'Test content' }],
-      })
+      expect(editor.children).toEqual([
+        {
+          type: 'paragraph',
+          lineHeight: '1.5',
+          indent: 2,
+          font: 'Times New Roman',
+          children: [{ text: 'Test content' }],
+        },
+      ])
     })
   })
 
@@ -242,13 +256,13 @@ describe('richText utils', () => {
 
       increaseIndent(editor)()
 
-      const [node] = Array.from(
-        SlateEditor.nodes(editor, {
-          match: (n) => !SlateEditor.isEditor(n) && 'type' in n,
-        })
-      )
-
-      expect((node[0] as any).indent).toBe(1)
+      expect(editor.children).toEqual([
+        {
+          type: 'paragraph',
+          indent: 1,
+          children: [{ text: 'Test content' }],
+        },
+      ])
     })
 
     it('should increment existing indent value', () => {
@@ -257,13 +271,13 @@ describe('richText utils', () => {
 
       increaseIndent(editor)()
 
-      const [node] = Array.from(
-        SlateEditor.nodes(editor, {
-          match: (n) => !SlateEditor.isEditor(n) && 'type' in n,
-        })
-      )
-
-      expect((node[0] as any).indent).toBe(3)
+      expect(editor.children).toEqual([
+        {
+          type: 'paragraph',
+          indent: 3,
+          children: [{ text: 'Test content' }],
+        },
+      ])
     })
 
     it('should increment from 0 to 1', () => {
@@ -272,13 +286,13 @@ describe('richText utils', () => {
 
       increaseIndent(editor)()
 
-      const [node] = Array.from(
-        SlateEditor.nodes(editor, {
-          match: (n) => !SlateEditor.isEditor(n) && 'type' in n,
-        })
-      )
-
-      expect((node[0] as any).indent).toBe(1)
+      expect(editor.children).toEqual([
+        {
+          type: 'paragraph',
+          indent: 1,
+          children: [{ text: 'Test content' }],
+        },
+      ])
     })
 
     it('should do nothing when no selection', () => {
@@ -287,21 +301,30 @@ describe('richText utils', () => {
 
       increaseIndent(editor)()
 
-      // Should not throw and indent should still be undefined
-      expect((editor.children[0] as any).indent).toBeUndefined()
+      // Structure should remain unchanged
+      expect(editor.children).toEqual([
+        {
+          type: 'paragraph',
+          children: [{ text: 'Test content' }],
+        },
+      ])
     })
 
-    it('should validate output structure with indent property', () => {
-      editor.children = createInitialValue()
+    it('should preserve other properties when increasing indent', () => {
+      editor.children = createInitialValue({ font: 'Arial', lineHeight: '1.5' })
       selectEditor()
 
       increaseIndent(editor)()
 
-      expect(editor.children[0]).toMatchObject({
-        type: 'paragraph',
-        indent: 1,
-        children: [{ text: 'Test content' }],
-      })
+      expect(editor.children).toEqual([
+        {
+          type: 'paragraph',
+          font: 'Arial',
+          lineHeight: '1.5',
+          indent: 1,
+          children: [{ text: 'Test content' }],
+        },
+      ])
     })
 
     it('should support multiple increments', () => {
@@ -312,13 +335,13 @@ describe('richText utils', () => {
       increaseIndent(editor)()
       increaseIndent(editor)()
 
-      const [node] = Array.from(
-        SlateEditor.nodes(editor, {
-          match: (n) => !SlateEditor.isEditor(n) && 'type' in n,
-        })
-      )
-
-      expect((node[0] as any).indent).toBe(3)
+      expect(editor.children).toEqual([
+        {
+          type: 'paragraph',
+          indent: 3,
+          children: [{ text: 'Test content' }],
+        },
+      ])
     })
   })
 
@@ -329,13 +352,13 @@ describe('richText utils', () => {
 
       decreaseIndent(editor)()
 
-      const [node] = Array.from(
-        SlateEditor.nodes(editor, {
-          match: (n) => !SlateEditor.isEditor(n) && 'type' in n,
-        })
-      )
-
-      expect((node[0] as any).indent).toBe(2)
+      expect(editor.children).toEqual([
+        {
+          type: 'paragraph',
+          indent: 2,
+          children: [{ text: 'Test content' }],
+        },
+      ])
     })
 
     it('should not go below 0', () => {
@@ -344,13 +367,13 @@ describe('richText utils', () => {
 
       decreaseIndent(editor)()
 
-      const [node] = Array.from(
-        SlateEditor.nodes(editor, {
-          match: (n) => !SlateEditor.isEditor(n) && 'type' in n,
-        })
-      )
-
-      expect((node[0] as any).indent).toBe(0)
+      expect(editor.children).toEqual([
+        {
+          type: 'paragraph',
+          indent: 0,
+          children: [{ text: 'Test content' }],
+        },
+      ])
     })
 
     it('should handle undefined indent as 0', () => {
@@ -359,14 +382,13 @@ describe('richText utils', () => {
 
       decreaseIndent(editor)()
 
-      const [node] = Array.from(
-        SlateEditor.nodes(editor, {
-          match: (n) => !SlateEditor.isEditor(n) && 'type' in n,
-        })
-      )
-
-      // Should not throw and should remain at 0 (or undefined treated as 0)
-      expect((node[0] as any).indent).toBeUndefined()
+      // Should remain unchanged (undefined treated as 0)
+      expect(editor.children).toEqual([
+        {
+          type: 'paragraph',
+          children: [{ text: 'Test content' }],
+        },
+      ])
     })
 
     it('should decrement to 0 and stop', () => {
@@ -375,13 +397,13 @@ describe('richText utils', () => {
 
       decreaseIndent(editor)()
 
-      const [node] = Array.from(
-        SlateEditor.nodes(editor, {
-          match: (n) => !SlateEditor.isEditor(n) && 'type' in n,
-        })
-      )
-
-      expect((node[0] as any).indent).toBe(0)
+      expect(editor.children).toEqual([
+        {
+          type: 'paragraph',
+          indent: 0,
+          children: [{ text: 'Test content' }],
+        },
+      ])
     })
 
     it('should do nothing when no selection', () => {
@@ -390,21 +412,31 @@ describe('richText utils', () => {
 
       decreaseIndent(editor)()
 
-      // Should not throw and indent should remain unchanged
-      expect((editor.children[0] as any).indent).toBe(5)
+      // Should remain unchanged
+      expect(editor.children).toEqual([
+        {
+          type: 'paragraph',
+          indent: 5,
+          children: [{ text: 'Test content' }],
+        },
+      ])
     })
 
-    it('should validate output structure after decrement', () => {
-      editor.children = createInitialValue({ indent: 2 })
+    it('should preserve other properties when decreasing indent', () => {
+      editor.children = createInitialValue({ indent: 2, font: 'Georgia', lineHeight: '2.0' })
       selectEditor()
 
       decreaseIndent(editor)()
 
-      expect(editor.children[0]).toMatchObject({
-        type: 'paragraph',
-        indent: 1,
-        children: [{ text: 'Test content' }],
-      })
+      expect(editor.children).toEqual([
+        {
+          type: 'paragraph',
+          indent: 1,
+          font: 'Georgia',
+          lineHeight: '2.0',
+          children: [{ text: 'Test content' }],
+        },
+      ])
     })
   })
 
@@ -418,13 +450,13 @@ describe('richText utils', () => {
       increaseIndent(editor)()
       decreaseIndent(editor)()
 
-      const [node] = Array.from(
-        SlateEditor.nodes(editor, {
-          match: (n) => !SlateEditor.isEditor(n) && 'type' in n,
-        })
-      )
-
-      expect((node[0] as any).indent).toBe(2)
+      expect(editor.children).toEqual([
+        {
+          type: 'paragraph',
+          indent: 2,
+          children: [{ text: 'Test content' }],
+        },
+      ])
     })
 
     it('should validate indent stays at 0 with multiple decrements', () => {
@@ -435,13 +467,13 @@ describe('richText utils', () => {
       decreaseIndent(editor)()
       decreaseIndent(editor)()
 
-      const [node] = Array.from(
-        SlateEditor.nodes(editor, {
-          match: (n) => !SlateEditor.isEditor(n) && 'type' in n,
-        })
-      )
-
-      expect((node[0] as any).indent).toBe(0)
+      expect(editor.children).toEqual([
+        {
+          type: 'paragraph',
+          indent: 0,
+          children: [{ text: 'Test content' }],
+        },
+      ])
     })
   })
 
@@ -455,38 +487,20 @@ describe('richText utils', () => {
 
       insertLink(editor)('https://example.com')
 
-      // Find the link node
-      const [linkNode] = Array.from(
-        SlateEditor.nodes(editor, {
-          match: (n) => !SlateEditor.isEditor(n) && (n as any).type === 'link',
-        })
-      )
-
-      expect(linkNode).toBeDefined()
-      expect((linkNode[0] as any).url).toBe('https://example.com')
-      expect((linkNode[0] as any).children[0].text).toBe('https://example.com')
-    })
-
-    it('should validate link node structure when inserted with collapsed selection', () => {
-      editor.children = createInitialValue()
-      Transforms.select(editor, {
-        anchor: { path: [0, 0], offset: 0 },
-        focus: { path: [0, 0], offset: 0 },
-      })
-
-      insertLink(editor)('https://test.com')
-
-      const [linkNode] = Array.from(
-        SlateEditor.nodes(editor, {
-          match: (n) => !SlateEditor.isEditor(n) && (n as any).type === 'link',
-        })
-      )
-
-      expect(linkNode[0]).toMatchObject({
-        type: 'link',
-        url: 'https://test.com',
-        children: [{ text: 'https://test.com' }],
-      })
+      expect(editor.children).toEqual([
+        {
+          type: 'paragraph',
+          children: [
+            { text: 'Test' },
+            {
+              type: 'link',
+              url: 'https://example.com',
+              children: [{ text: 'https://example.com' }],
+            },
+            { text: ' content' },
+          ],
+        },
+      ])
     })
 
     it('should wrap selected text with link when selection is expanded', () => {
@@ -498,14 +512,20 @@ describe('richText utils', () => {
 
       insertLink(editor)('https://example.com')
 
-      const [linkNode] = Array.from(
-        SlateEditor.nodes(editor, {
-          match: (n) => !SlateEditor.isEditor(n) && (n as any).type === 'link',
-        })
-      )
-
-      expect(linkNode).toBeDefined()
-      expect((linkNode[0] as any).url).toBe('https://example.com')
+      expect(editor.children).toEqual([
+        {
+          type: 'paragraph',
+          children: [
+            { text: '' }, // Empty text node before inline element (Slate behavior)
+            {
+              type: 'link',
+              url: 'https://example.com',
+              children: [{ text: 'Test' }],
+            },
+            { text: ' content' },
+          ],
+        },
+      ])
     })
 
     it('should unwrap existing link before wrapping with new URL', () => {
@@ -529,16 +549,20 @@ describe('richText utils', () => {
 
       insertLink(editor)('https://new.com')
 
-      const linkNodes = Array.from(
-        SlateEditor.nodes(editor, {
-          at: [],
-          match: (n) => !SlateEditor.isEditor(n) && (n as any).type === 'link',
-        })
-      )
-
-      // Should have one link with new URL
-      expect(linkNodes.length).toBeGreaterThan(0)
-      expect((linkNodes[0][0] as any).url).toBe('https://new.com')
+      expect(editor.children).toEqual([
+        {
+          type: 'paragraph',
+          children: [
+            { text: '' }, // Empty text node before inline element (Slate behavior)
+            {
+              type: 'link',
+              url: 'https://new.com',
+              children: [{ text: 'Link' }],
+            },
+            { text: ' text' },
+          ],
+        },
+      ])
     })
 
     it('should do nothing when no selection', () => {
@@ -547,14 +571,68 @@ describe('richText utils', () => {
 
       insertLink(editor)('https://example.com')
 
-      const linkNodes = Array.from(
-        SlateEditor.nodes(editor, {
-          at: [],
-          match: (n) => !SlateEditor.isEditor(n) && (n as any).type === 'link',
-        })
-      )
+      // Structure should remain unchanged
+      expect(editor.children).toEqual([
+        {
+          type: 'paragraph',
+          children: [{ text: 'Test content' }],
+        },
+      ])
+    })
 
-      expect(linkNodes.length).toBe(0)
+    it('should handle inserting link at beginning of text', () => {
+      editor.children = createInitialValue()
+      Transforms.select(editor, {
+        anchor: { path: [0, 0], offset: 0 },
+        focus: { path: [0, 0], offset: 0 },
+      })
+
+      insertLink(editor)('https://test.com')
+
+      expect(editor.children).toEqual([
+        {
+          type: 'paragraph',
+          children: [
+            { text: '' }, // Empty text node before inline element (Slate behavior)
+            {
+              type: 'link',
+              url: 'https://test.com',
+              children: [{ text: 'https://test.com' }],
+            },
+            { text: 'Test content' },
+          ],
+        },
+      ])
+    })
+
+    it('should handle inserting link at end of text', () => {
+      editor.children = [
+        {
+          type: 'paragraph',
+          children: [{ text: 'Test' }],
+        } as any,
+      ]
+      Transforms.select(editor, {
+        anchor: { path: [0, 0], offset: 4 },
+        focus: { path: [0, 0], offset: 4 },
+      })
+
+      insertLink(editor)('https://end.com')
+
+      expect(editor.children).toEqual([
+        {
+          type: 'paragraph',
+          children: [
+            { text: 'Test' },
+            {
+              type: 'link',
+              url: 'https://end.com',
+              children: [{ text: 'https://end.com' }],
+            },
+            { text: '' }, // Empty text node after inline element (Slate behavior)
+          ],
+        },
+      ])
     })
   })
 
@@ -580,14 +658,12 @@ describe('richText utils', () => {
 
       removeLink(editor)()
 
-      const linkNodes = Array.from(
-        SlateEditor.nodes(editor, {
-          at: [],
-          match: (n) => !SlateEditor.isEditor(n) && (n as any).type === 'link',
-        })
-      )
-
-      expect(linkNodes.length).toBe(0)
+      expect(editor.children).toEqual([
+        {
+          type: 'paragraph',
+          children: [{ text: 'Link' }],
+        },
+      ])
     })
 
     it('should do nothing when no selection', () => {
@@ -608,15 +684,19 @@ describe('richText utils', () => {
 
       removeLink(editor)()
 
-      const linkNodes = Array.from(
-        SlateEditor.nodes(editor, {
-          at: [],
-          match: (n) => !SlateEditor.isEditor(n) && (n as any).type === 'link',
-        })
-      )
-
       // Link should still exist
-      expect(linkNodes.length).toBe(1)
+      expect(editor.children).toEqual([
+        {
+          type: 'paragraph',
+          children: [
+            {
+              type: 'link',
+              url: 'https://example.com',
+              children: [{ text: 'Link' }],
+            },
+          ],
+        },
+      ])
     })
 
     it('should do nothing when not in a link', () => {
@@ -625,11 +705,47 @@ describe('richText utils', () => {
 
       removeLink(editor)()
 
-      // Should not throw
-      expect(editor.children[0]).toMatchObject({
-        type: 'paragraph',
-        children: [{ text: 'Test content' }],
+      // Should remain unchanged
+      expect(editor.children).toEqual([
+        {
+          type: 'paragraph',
+          children: [{ text: 'Test content' }],
+        },
+      ])
+    })
+
+    it('should handle removing link with multiple text nodes', () => {
+      editor.children = [
+        {
+          type: 'paragraph',
+          children: [
+            { text: 'Before ' },
+            {
+              type: 'link',
+              url: 'https://example.com',
+              children: [{ text: 'link text' }],
+            } as any,
+            { text: ' after' },
+          ],
+        } as any,
+      ]
+
+      Transforms.select(editor, {
+        anchor: { path: [0, 1, 0], offset: 2 },
+        focus: { path: [0, 1, 0], offset: 2 },
       })
+
+      removeLink(editor)()
+
+      // Slate normalizes adjacent text nodes into one
+      expect(editor.children).toEqual([
+        {
+          type: 'paragraph',
+          children: [
+            { text: 'Before link text after' },
+          ],
+        },
+      ])
     })
   })
 
@@ -708,6 +824,31 @@ describe('richText utils', () => {
 
       expect(isActive).toBe(false)
     })
+
+    it('should return false when cursor is before a link', () => {
+      editor.children = [
+        {
+          type: 'paragraph',
+          children: [
+            { text: 'Before ' },
+            {
+              type: 'link',
+              url: 'https://example.com',
+              children: [{ text: 'link' }],
+            } as any,
+          ],
+        } as any,
+      ]
+
+      Transforms.select(editor, {
+        anchor: { path: [0, 0], offset: 3 },
+        focus: { path: [0, 0], offset: 3 },
+      })
+
+      const isActive = isLinkActive(editor)()
+
+      expect(isActive).toBe(false)
+    })
   })
 
   describe('combined styling operations', () => {
@@ -718,12 +859,14 @@ describe('richText utils', () => {
       setLineHeight(editor)('1.5')
       setFont(editor)('Arial')
 
-      expect(editor.children[0]).toMatchObject({
-        type: 'paragraph',
-        lineHeight: '1.5',
-        font: 'Arial',
-        children: [{ text: 'Test content' }],
-      })
+      expect(editor.children).toEqual([
+        {
+          type: 'paragraph',
+          lineHeight: '1.5',
+          font: 'Arial',
+          children: [{ text: 'Test content' }],
+        },
+      ])
     })
 
     it('should support combining all styling properties', () => {
@@ -735,13 +878,61 @@ describe('richText utils', () => {
       increaseIndent(editor)()
       increaseIndent(editor)()
 
-      expect(editor.children[0]).toMatchObject({
-        type: 'paragraph',
-        lineHeight: '2.0',
-        font: 'Georgia',
-        indent: 2,
-        children: [{ text: 'Test content' }],
+      expect(editor.children).toEqual([
+        {
+          type: 'paragraph',
+          lineHeight: '2.0',
+          font: 'Georgia',
+          indent: 2,
+          children: [{ text: 'Test content' }],
+        },
+      ])
+    })
+
+    it('should handle complete workflow: style, indent, and link', () => {
+      editor.children = [
+        {
+          type: 'paragraph',
+          children: [{ text: 'Click here for more info' }],
+        } as any,
+      ]
+
+      // Select entire text
+      Transforms.select(editor, {
+        anchor: { path: [0, 0], offset: 0 },
+        focus: { path: [0, 0], offset: 25 },
       })
+
+      // Apply styling
+      setLineHeight(editor)('1.8')
+      setFont(editor)('Helvetica')
+      increaseIndent(editor)()
+
+      // Select "here" for link
+      Transforms.select(editor, {
+        anchor: { path: [0, 0], offset: 6 },
+        focus: { path: [0, 0], offset: 10 },
+      })
+
+      insertLink(editor)('https://docs.example.com')
+
+      expect(editor.children).toEqual([
+        {
+          type: 'paragraph',
+          lineHeight: '1.8',
+          font: 'Helvetica',
+          indent: 1,
+          children: [
+            { text: 'Click ' },
+            {
+              type: 'link',
+              url: 'https://docs.example.com',
+              children: [{ text: 'here' }],
+            },
+            { text: ' for more info' },
+          ],
+        },
+      ])
     })
   })
 })

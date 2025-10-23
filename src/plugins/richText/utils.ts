@@ -140,13 +140,30 @@ export const insertLink = (editor: SlateEditor) => (url: string) => {
     const isCollapsed = selection.anchor.offset === selection.focus.offset
 
     if (isCollapsed) {
-        // Insert a new link node with the URL as text
+        // Insert the URL as text first, then wrap it in a link
+        Transforms.insertText(editor, url)
+
+        // Select the text we just inserted
+        const end = editor.selection?.anchor
+        if (end) {
+            Transforms.select(editor, {
+                anchor: { path: end.path, offset: end.offset - url.length },
+                focus: end,
+            })
+        }
+
+        // Wrap the selected text in a link
         const link = {
             type: 'link',
             url,
-            children: [{ text: url }],
+            children: [],
         }
-        Transforms.insertNodes(editor, link as any)
+        Transforms.wrapNodes(editor, link as any, {
+            split: true,
+        })
+
+        // Move cursor to end of link
+        Transforms.collapse(editor, { edge: 'end' })
     } else {
         // Check if we're already in a link
         const isInLink = isLinkActive(editor)()
@@ -167,13 +184,10 @@ export const insertLink = (editor: SlateEditor) => (url: string) => {
             url,
             children: [],
         }
-        // Use split: true to split text nodes, but Slate should not split block nodes
-        // because link is marked as inline in withInlines
         Transforms.wrapNodes(editor, link as any, {
             split: true,
-            // Don't wrap void nodes
-            voids: false,
         })
+
         Transforms.collapse(editor, { edge: 'end' })
     }
 }
