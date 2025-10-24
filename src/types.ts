@@ -8,6 +8,7 @@ export type ElementStyles = {
   align?: string
   lineHeight?: string
   font?: string
+  fontSize?: string
 }
 
 export type BlockStyles = {

@@ -6,6 +6,8 @@ import {
   getLineHeight,
   setFont,
   getFont,
+  setFontSize,
+  getFontSize,
   increaseIndent,
   decreaseIndent,
   insertLink,
@@ -245,6 +247,129 @@ describe('richText utils', () => {
         selectEditor()
 
         expect(getFont(editor)()).toBe(fontName)
+      })
+    })
+  })
+
+  describe('setFontSize', () => {
+    it('should set font size on current element', () => {
+      editor.children = createInitialValue()
+      selectEditor()
+
+      setFontSize(editor)('16px')
+
+      expect(editor.children).toEqual([
+        {
+          type: 'paragraph',
+          fontSize: '16px',
+          children: [{ text: 'Test content' }],
+        },
+      ])
+    })
+
+    it('should update font size value', () => {
+      editor.children = createInitialValue({ fontSize: '14px' })
+      selectEditor()
+
+      setFontSize(editor)('20px')
+
+      expect(editor.children).toEqual([
+        {
+          type: 'paragraph',
+          fontSize: '20px',
+          children: [{ text: 'Test content' }],
+        },
+      ])
+    })
+
+    it('should clear font size when set to undefined', () => {
+      editor.children = createInitialValue({ fontSize: '16px' })
+      selectEditor()
+
+      setFontSize(editor)(undefined)
+
+      expect(editor.children).toEqual([
+        {
+          type: 'paragraph',
+          fontSize: undefined,
+          children: [{ text: 'Test content' }],
+        },
+      ])
+    })
+
+    it('should preserve other properties when setting fontSize', () => {
+      editor.children = createInitialValue({ font: 'Arial', lineHeight: '1.5' })
+      selectEditor()
+
+      setFontSize(editor)('18px')
+
+      expect(editor.children).toEqual([
+        {
+          type: 'paragraph',
+          font: 'Arial',
+          lineHeight: '1.5',
+          fontSize: '18px',
+          children: [{ text: 'Test content' }],
+        },
+      ])
+    })
+
+    it('should support different font size units', () => {
+      const sizes = ['16px', '1.2em', '14pt', '120%']
+
+      sizes.forEach((size) => {
+        editor.children = createInitialValue()
+        selectEditor()
+
+        setFontSize(editor)(size)
+
+        expect(editor.children).toEqual([
+          {
+            type: 'paragraph',
+            fontSize: size,
+            children: [{ text: 'Test content' }],
+          },
+        ])
+      })
+    })
+  })
+
+  describe('getFontSize', () => {
+    it('should return undefined when no font size is set', () => {
+      editor.children = createInitialValue()
+      selectEditor()
+
+      const fontSize = getFontSize(editor)()
+
+      expect(fontSize).toBeUndefined()
+    })
+
+    it('should return current font size value', () => {
+      editor.children = createInitialValue({ fontSize: '16px' })
+      selectEditor()
+
+      const fontSize = getFontSize(editor)()
+
+      expect(fontSize).toBe('16px')
+    })
+
+    it('should return undefined when no selection', () => {
+      editor.children = createInitialValue({ fontSize: '16px' })
+      // No selection made
+
+      const fontSize = getFontSize(editor)()
+
+      expect(fontSize).toBeUndefined()
+    })
+
+    it('should retrieve different font size values', () => {
+      const sizes = ['12px', '16px', '20px', '1.5em', '14pt']
+
+      sizes.forEach((size) => {
+        editor.children = createInitialValue({ fontSize: size })
+        selectEditor()
+
+        expect(getFontSize(editor)()).toBe(size)
       })
     })
   })

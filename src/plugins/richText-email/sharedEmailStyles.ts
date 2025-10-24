@@ -14,6 +14,7 @@ export const getBaseElementStyles = (element: CustomElement): React.CSSPropertie
   return {
     lineHeight: element.lineHeight,
     fontFamily: element.font,
+    fontSize: element.fontSize,
     textAlign: element.align as React.CSSProperties['textAlign'],
   }
 }
@@ -80,6 +81,7 @@ export const getHeadingStyles = (
     ...baseStyles,
     ...(element.lineHeight && { lineHeight: element.lineHeight }),
     ...(element.font && { fontFamily: element.font }),
+    ...(element.fontSize && { fontSize: element.fontSize }),
     ...(element.align && { textAlign: element.align as React.CSSProperties['textAlign'] }),
   }
 }
@@ -107,6 +109,7 @@ export const getParagraphStyles = (element?: CustomElement, theme?: ComposerThem
     ...defaults,
     ...(element.lineHeight && { lineHeight: element.lineHeight }),
     ...(element.font && { fontFamily: element.font }),
+    ...(element.fontSize && { fontSize: element.fontSize }),
     ...(element.align && { textAlign: element.align as React.CSSProperties['textAlign'] }),
     ...(indent && { paddingLeft: indent }),
   }
@@ -133,6 +136,7 @@ export const getBlockQuoteStyles = (element?: CustomElement): React.CSSPropertie
     ...defaults,
     ...(element.lineHeight && { lineHeight: element.lineHeight }),
     ...(element.font && { fontFamily: element.font }),
+    ...(element.fontSize && { fontSize: element.fontSize }),
     ...(element.align && { textAlign: element.align as React.CSSProperties['textAlign'] }),
   }
 }
@@ -155,6 +159,7 @@ export const getListStyles = (element?: CustomElement): React.CSSProperties => {
     ...defaults,
     ...(element.lineHeight && { lineHeight: element.lineHeight }),
     ...(element.font && { fontFamily: element.font }),
+    ...(element.fontSize && { fontSize: element.fontSize }),
     ...(element.align && { textAlign: element.align as React.CSSProperties['textAlign'] }),
   }
 }
@@ -176,6 +181,7 @@ export const getListItemStyles = (element?: CustomElement): React.CSSProperties 
     ...defaults,
     ...(element.lineHeight && { lineHeight: element.lineHeight }),
     ...(element.font && { fontFamily: element.font }),
+    ...(element.fontSize && { fontSize: element.fontSize }),
     ...(element.align && { textAlign: element.align as React.CSSProperties['textAlign'] }),
   }
 }
@@ -195,6 +201,7 @@ export const getLinkStyles = (primaryColor?: string, element?: CustomElement): R
     ...defaults,
     ...(element.lineHeight && { lineHeight: element.lineHeight }),
     ...(element.font && { fontFamily: element.font }),
+    ...(element.fontSize && { fontSize: element.fontSize }),
   }
 }
 

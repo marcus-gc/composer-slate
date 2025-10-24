@@ -121,7 +121,6 @@ export const Content: React.FC<ComposerContentProps> = ({
           if (!blockEntry) return
 
           const [, blockPath] = blockEntry
-          const blockStart = Editor.start(editor, blockPath)
           const isAtStart = Editor.isStart(editor, selection.anchor, blockPath)
 
           // Insert break (splits block into two blocks of same type)

@@ -15,6 +15,7 @@ describe('richText styles', () => {
       expect(styles).toEqual({
         lineHeight: undefined,
         fontFamily: undefined,
+        fontSize: undefined,
         textAlign: undefined,
       })
     })
@@ -43,6 +44,18 @@ describe('richText styles', () => {
       expect(styles.fontFamily).toBe('Arial')
     })
 
+    it('should extract font size from element', () => {
+      const element: CustomElement = {
+        type: 'paragraph',
+        fontSize: '18px',
+        children: [{ text: 'Test' }],
+      }
+
+      const styles = getElementStyles(element)
+
+      expect(styles.fontSize).toBe('18px')
+    })
+
     it('should extract text alignment from element', () => {
       const element: CustomElement = {
         type: 'paragraph',
@@ -60,6 +73,7 @@ describe('richText styles', () => {
         type: 'paragraph',
         lineHeight: '2',
         font: 'Georgia',
+        fontSize: '20px',
         align: 'right',
         children: [{ text: 'Test' }],
       }
@@ -69,6 +83,7 @@ describe('richText styles', () => {
       expect(styles).toEqual({
         lineHeight: '2',
         fontFamily: 'Georgia',
+        fontSize: '20px',
         textAlign: 'right',
       })
     })
@@ -112,6 +127,7 @@ describe('richText styles', () => {
         type: 'paragraph',
         lineHeight: '1.5',
         font: 'Arial',
+        fontSize: '16px',
         children: [{ text: 'Test' }],
       }
 
@@ -120,6 +136,7 @@ describe('richText styles', () => {
       expect(styles).toEqual({
         lineHeight: '1.5',
         fontFamily: 'Arial',
+        fontSize: '16px',
         textAlign: undefined,
         paddingLeft: undefined,
       })
@@ -180,6 +197,7 @@ describe('richText styles', () => {
         indent: 3,
         lineHeight: '2',
         font: 'Georgia',
+        fontSize: '18px',
         align: 'center',
         children: [{ text: 'Test' }],
       }
@@ -189,6 +207,7 @@ describe('richText styles', () => {
       expect(styles).toEqual({
         lineHeight: '2',
         fontFamily: 'Georgia',
+        fontSize: '18px',
         textAlign: 'center',
         paddingLeft: '72px', // 3 * 24
       })

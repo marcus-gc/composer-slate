@@ -2,13 +2,14 @@ import { CustomElement } from '../../types'
 import React from 'react'
 
 /**
- * Extract common element styles (align, lineHeight, font)
+ * Extract common element styles (align, lineHeight, font, fontSize)
  * from element properties and convert to React CSS properties
  */
 export const getElementStyles = (element: CustomElement): React.CSSProperties => {
   return {
     lineHeight: element.lineHeight,
     fontFamily: element.font,
+    fontSize: element.fontSize,
     textAlign: element.align as React.CSSProperties['textAlign'],
   }
 }
