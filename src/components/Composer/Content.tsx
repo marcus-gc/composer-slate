@@ -2,7 +2,7 @@ import React, { useCallback, useMemo } from 'react'
 // @ts-ignore - no types available for is-hotkey
 import * as isHotkeyModule from 'is-hotkey'
 import { Editable, RenderElementProps, RenderLeafProps } from 'slate-react'
-import { Editor } from 'slate'
+import { Editor, Transforms, Element as SlateElement } from 'slate'
 import { useComposer } from '../../context/ComposerContext'
 import Element from '../Element'
 import Leaf from '../Leaf'
@@ -103,6 +103,55 @@ export const Content: React.FC<ComposerContentProps> = ({
         if (event.key === 'Enter' && event.shiftKey) {
           event.preventDefault()
           Editor.insertText(editor, '\n')
+          return
+        }
+
+        // Handle plain Enter - create new paragraph block
+        if (event.key === 'Enter' && !event.shiftKey) {
+          event.preventDefault()
+
+          // Check if cursor is at the start of the block before breaking
+          const { selection } = editor
+          if (!selection) return
+
+          const [blockEntry] = Editor.nodes(editor, {
+            match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && Editor.isBlock(editor, n),
+          })
+
+          if (!blockEntry) return
+
+          const [, blockPath] = blockEntry
+          const blockStart = Editor.start(editor, blockPath)
+          const isAtStart = Editor.isStart(editor, selection.anchor, blockPath)
+
+          // Insert break (splits block into two blocks of same type)
+          Editor.insertBreak(editor)
+
+          if (isAtStart) {
+            // Cursor was at start: convert the PREVIOUS block (empty) to paragraph
+            // After break, cursor is in second block (with content)
+            const { selection: newSelection } = editor
+            if (newSelection) {
+              const [currentEntry] = Editor.nodes(editor, {
+                match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && Editor.isBlock(editor, n),
+              })
+              if (currentEntry) {
+                const [, currentPath] = currentEntry
+                const previousPath = [...currentPath.slice(0, -1), currentPath[currentPath.length - 1] - 1]
+                Transforms.setNodes(editor, { type: 'paragraph' }, { at: previousPath })
+              }
+            }
+          } else {
+            // Cursor was not at start: convert the CURRENT block (new/split content) to paragraph
+            Transforms.setNodes(
+              editor,
+              { type: 'paragraph' },
+              {
+                match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && Editor.isBlock(editor, n),
+              }
+            )
+          }
+
           return
         }
 
