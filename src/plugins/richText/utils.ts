@@ -23,6 +23,17 @@ export const setFont = (editor: SlateEditor) => (font: string | undefined) => {
 }
 
 /**
+ * Set font size for the current block
+ * @param editor - The Slate editor instance
+ * @returns A function that takes font size value (e.g., '16px', '1.2em', '14pt')
+ */
+export const setFontSize = (editor: SlateEditor) => (fontSize: string | undefined) => {
+    Transforms.setNodes<SlateElement>(editor, { fontSize } as any, {
+        match: (n) => !SlateEditor.isEditor(n) && SlateElement.isElement(n),
+    })
+}
+
+/**
  * Increase indentation of the current block
  * @param editor - The Slate editor instance
  * @returns A function that increases indentation
@@ -125,6 +136,30 @@ export const getFont = (editor: SlateEditor) => (): string | undefined => {
     if (match) {
         const [node] = match
         return (node as any).font
+    }
+
+    return undefined
+}
+
+/**
+ * Get the current font size of the active block
+ * @param editor - The Slate editor instance
+ * @returns A function that returns the font size value or undefined
+ */
+export const getFontSize = (editor: SlateEditor) => (): string | undefined => {
+    const { selection } = editor
+    if (!selection) return undefined
+
+    const [match] = Array.from(
+        SlateEditor.nodes(editor, {
+            at: selection,
+            match: (n) => !SlateEditor.isEditor(n) && SlateElement.isElement(n),
+        })
+    )
+
+    if (match) {
+        const [node] = match
+        return (node as any).fontSize
     }
 
     return undefined
@@ -297,6 +332,8 @@ export const utils = {
     getLineHeight,
     setFont,
     getFont,
+    setFontSize,
+    getFontSize,
     increaseIndent,
     decreaseIndent,
     insertLink,
