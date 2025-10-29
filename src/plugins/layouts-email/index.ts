@@ -24,8 +24,9 @@ import { insertLayout } from '../layouts/utils'
  * Layout email plugin for Composer
  *
  * Provides:
- * - **Elements**: Email-safe Row and Column components
+ * - **Elements**: Email-safe Row and Column components with floating layout controls
  * - **Utils**: insertLayout (shared with layouts)
+ * - **Patterns**: Predefined layout patterns (50/50, 33/33/33, etc.)
  */
 export const layoutsEmail: Plugin = {
   elements,
@@ -33,3 +34,8 @@ export const layoutsEmail: Plugin = {
     insertLayout,
   },
 }
+
+// Export layout patterns and types for external use
+export { LAYOUT_PATTERNS } from '../layouts/layoutPatterns'
+export type { LayoutPattern } from '../layouts/layoutPatterns'
+export type { InsertLayoutOptions } from '../layouts/utils'
