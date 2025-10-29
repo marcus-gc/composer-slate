@@ -42,6 +42,7 @@ export interface Plugin {
   utils?: Record<string, (editor: any) => (...args: any[]) => any>
   provider?: React.ComponentType<{ children: React.ReactNode }> // Optional provider component
   elementDecorator?: (props: ElementDecoratorProps) => React.ReactNode // Optional element wrapper/decorator
+  withEditor?: <T extends any>(editor: T) => T // Optional editor extension function
 }
 
 export interface ComposerRootProps {
@@ -70,6 +71,13 @@ export const Root: React.FC<ComposerRootProps> = ({
 }) => {
   const editor = useMemo(() => {
     let ed = withHistory(withReact(createEditor()))
+
+    // Apply plugin editor extensions first
+    plugins.forEach((plugin) => {
+      if (plugin.withEditor) {
+        ed = plugin.withEditor(ed)
+      }
+    })
 
     // Auto-detect inline and void elements from plugin metadata
     const inlineTypes = new Set<string>()

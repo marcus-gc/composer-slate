@@ -18,7 +18,7 @@ import { Plugin } from '../../components/Composer/Root'
 import { elements } from './elements'
 
 // Reuse utilities from standard layouts plugin
-import { insertLayout } from '../layouts/utils'
+import { insertLayout, withLayouts } from '../layouts/utils'
 
 /**
  * Layout email plugin for Composer
@@ -26,10 +26,12 @@ import { insertLayout } from '../layouts/utils'
  * Provides:
  * - **Elements**: Email-safe Row and Column components
  * - **Utils**: insertLayout (shared with layouts)
+ * - **withEditor**: withLayouts (prevents layout structures from being copied/pasted)
  */
 export const layoutsEmail: Plugin = {
   elements,
   utils: {
     insertLayout,
   },
+  withEditor: withLayouts,
 }
