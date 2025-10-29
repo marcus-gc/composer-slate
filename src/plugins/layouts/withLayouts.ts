@@ -1,5 +1,4 @@
 import { Editor, Element as SlateElement, Transforms } from 'slate'
-import { ReactEditor } from 'slate-react'
 
 /**
  * Recursively extract all non-layout blocks from a fragment
@@ -13,16 +12,17 @@ const extractBlocksFromFragment = (nodes: any[]): any[] => {
       // Skip layout containers and columns, extract their children instead
       if (node.type === 'layout-container') {
         // Extract from all columns
-        result.push(...extractBlocksFromFragment(node.children))
+        result.push(...extractBlocksFromFragment(node.children as any[]))
       } else if (node.type === 'layout-column') {
         // Extract column contents
-        result.push(...extractBlocksFromFragment(node.children))
+        result.push(...extractBlocksFromFragment(node.children as any[]))
       } else {
         // Keep the block as-is (but process its children recursively)
+        const hasChildren = 'children' in node && Array.isArray(node.children)
         result.push({
           ...node,
-          children: SlateElement.isElement(node)
-            ? extractBlocksFromFragment(node.children)
+          children: hasChildren
+            ? extractBlocksFromFragment(node.children as any[])
             : node.children
         })
       }

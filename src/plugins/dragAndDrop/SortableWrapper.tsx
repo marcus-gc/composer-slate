@@ -10,8 +10,6 @@ export const SortableWrapper = ({
   element,
   children,
   isInline,
-  hideBlockMenu,
-  attributes,
 }: ElementDecoratorProps) => {
   const editor = useSlateStatic()
   const { overId } = useDragAndDrop()

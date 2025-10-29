@@ -42,7 +42,7 @@ export interface Plugin {
   utils?: Record<string, (editor: any) => (...args: any[]) => any>
   provider?: React.ComponentType<{ children: React.ReactNode }> // Optional provider component
   elementDecorator?: (props: ElementDecoratorProps) => React.ReactNode // Optional element wrapper/decorator
-  withEditor?: <T extends any>(editor: T) => T // Optional editor extension function
+  withEditor?: (editor: any) => any // Optional editor extension function
 }
 
 export interface ComposerRootProps {
