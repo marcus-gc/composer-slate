@@ -3,6 +3,7 @@ import { ReactEditor, useSlateStatic } from 'slate-react'
 import { useBlockMenu } from '../../context/BlockMenuContext'
 import { BlockMenuHandle } from '../../components/Composer/BlockMenuHandle'
 import { ElementDecoratorProps } from '../../components/Composer/Root'
+import { pathToId, useDragAndDrop } from '../../context/DragAndDropContext'
 
 export const BlockMenuWrapper = ({
   element,
@@ -12,6 +13,17 @@ export const BlockMenuWrapper = ({
 }: ElementDecoratorProps) => {
   const editor = useSlateStatic()
   const [isHovered, setIsHovered] = useState(false)
+
+  // Get drag state - use try/catch in case dragAndDrop plugin isn't loaded
+  let isDragging = false
+  let activeId = null
+  try {
+    const dragState = useDragAndDrop()
+    isDragging = dragState.isDragging
+    activeId = dragState.activeId
+  } catch (e) {
+    // DragAndDrop context not available
+  }
 
   // Try to access block menu context (might not be available)
   try {
@@ -35,6 +47,15 @@ export const BlockMenuWrapper = ({
     return <>{children}</>
   }
 
+  // Check if this is the block being dragged
+  const blockId = blockPath ? pathToId(blockPath) : null
+  const isBeingDragged = isDragging && activeId === blockId
+
+  // Only show handle if:
+  // 1. Not currently dragging, OR
+  // 2. This block is the one being dragged
+  const shouldShowHandle = isHovered && (!isDragging || isBeingDragged)
+
   // Wrap block elements with hover container and handle
   return (
     <div
@@ -46,7 +67,7 @@ export const BlockMenuWrapper = ({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {isHovered && <BlockMenuHandle blockPath={blockPath} />}
+      {shouldShowHandle && <BlockMenuHandle blockPath={blockPath} />}
       {children}
     </div>
   )

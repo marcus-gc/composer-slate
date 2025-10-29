@@ -14,6 +14,8 @@ import {
   getLineHeight,
   setFont,
   getFont,
+  setFontSize,
+  getFontSize,
   increaseIndent,
   decreaseIndent,
   insertLink,
@@ -30,6 +32,8 @@ export const richText: Plugin = {
     getLineHeight,
     setFont,
     getFont,
+    setFontSize,
+    getFontSize,
 
     // Indentation
     increaseIndent,

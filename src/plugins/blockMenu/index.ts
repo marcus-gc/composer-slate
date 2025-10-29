@@ -18,6 +18,8 @@ import {
   convertBlock,
   duplicateBlock,
   deleteBlock,
+  moveBlockUp,
+  moveBlockDown,
 } from './utils'
 
 export const blockMenu: Plugin = {
@@ -27,5 +29,7 @@ export const blockMenu: Plugin = {
     convertBlock,
     duplicateBlock,
     deleteBlock,
+    moveBlockUp,
+    moveBlockDown,
   },
 }

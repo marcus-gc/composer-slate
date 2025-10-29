@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { Descendant, Transforms, Editor } from 'slate'
-import { Composer, richText, layouts, images, blockMenu, blockStyling, ComposerTheme } from '../../../src'
+import { Composer, richText, layouts, images, blockMenu, blockStyling, dragAndDrop, ComposerTheme } from '../../../src'
 import { useComposer } from '../../../src/context/ComposerContext'
 import { render } from '@react-email/render'
 import * as Email from '../../../src/components/Email'
@@ -69,7 +69,7 @@ export const StandardPluginsDemo = ({ theme }: StandardPluginsDemoProps) => {
     <section id="standard-plugins" style={{ marginBottom: '80px', scrollMarginTop: '20px' }}>
       <h2 style={{ fontSize: '28px', marginBottom: '10px', fontWeight: '600' }}>Standard Plugins Demo</h2>
       <p style={{ marginBottom: '30px', color: '#777', fontSize: '15px' }}>
-        Using standard richText, layouts, images, and blockMenu plugins
+        Using standard richText, layouts, images, blockMenu, blockStyling, and dragAndDrop plugins
       </p>
 
       {/* 3-column layout */}
@@ -125,7 +125,7 @@ export const StandardPluginsDemo = ({ theme }: StandardPluginsDemoProps) => {
         <div style={{ gridColumn: 'span 1' }}>
           <h3 style={{ fontSize: '18px', marginBottom: '15px', fontWeight: '600' }}>Editor</h3>
           <p style={{ marginBottom: '15px', color: '#777', fontSize: '14px' }}>
-            Hover over blocks to see the menu. Use the toolbar for formatting and layouts.
+            Hover over blocks to see the menu. Use the toolbar for formatting and layouts. Drag blocks to reorder them.
           </p>
           <div
             style={{
@@ -138,7 +138,7 @@ export const StandardPluginsDemo = ({ theme }: StandardPluginsDemoProps) => {
             }}
           >
             <Composer.Root
-              plugins={[richText, layouts, images, blockMenu, blockStyling]}
+              plugins={[richText, layouts, images, dragAndDrop, blockMenu, blockStyling]}
               theme={theme}
               onChange={(newValue) => {
                 setValue(newValue)

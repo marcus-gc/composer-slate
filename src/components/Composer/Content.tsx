@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo } from 'react'
 // @ts-ignore - no types available for is-hotkey
 import * as isHotkeyModule from 'is-hotkey'
-import { Editable, RenderElementProps, RenderLeafProps } from 'slate-react'
+import { Editable, RenderElementProps, RenderLeafProps, ReactEditor } from 'slate-react'
 import { Editor, Transforms, Element as SlateElement } from 'slate'
 import { useComposer } from '../../context/ComposerContext'
 import Element from '../Element'
@@ -74,14 +74,26 @@ export const Content: React.FC<ComposerContentProps> = ({
   }, [plugins])
 
   const renderElement = useCallback(
-    (props: RenderElementProps) => (
-      <Element
-        availableElements={availableElements}
-        elementDecorators={elementDecorators}
-        {...props}
-      />
-    ),
-    [availableElements, elementDecorators]
+    (props: RenderElementProps) => {
+      // Get the path for this element
+      let elementPath
+      try {
+        elementPath = ReactEditor.findPath(editor as ReactEditor, props.element)
+      } catch (e) {
+        // If we can't find the path, continue without it
+        elementPath = undefined
+      }
+
+      return (
+        <Element
+          availableElements={availableElements}
+          elementDecorators={elementDecorators}
+          elementPath={elementPath}
+          {...props}
+        />
+      )
+    },
+    [availableElements, elementDecorators, editor]
   )
 
   const renderLeaf = useCallback(
@@ -121,7 +133,6 @@ export const Content: React.FC<ComposerContentProps> = ({
           if (!blockEntry) return
 
           const [, blockPath] = blockEntry
-          const blockStart = Editor.start(editor, blockPath)
           const isAtStart = Editor.isStart(editor, selection.anchor, blockPath)
 
           // Insert break (splits block into two blocks of same type)

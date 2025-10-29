@@ -37,7 +37,7 @@ export const elements = {
   'layout-container': {
     component: LayoutContainer,
     showInBlockMenu: false,
-    hideBlockMenu: true,
+    hideBlockMenu: false,
   },
   'layout-column': {
     component: LayoutColumn,

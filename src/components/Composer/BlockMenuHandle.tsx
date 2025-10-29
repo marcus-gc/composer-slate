@@ -1,6 +1,7 @@
 import React from 'react'
 import { Path } from 'slate'
 import { useBlockMenu } from '../../context/BlockMenuContext'
+import { useDragHandle } from '../../context/DragHandleContext'
 
 export interface BlockMenuHandleProps {
   blockPath: Path
@@ -35,9 +36,10 @@ export const BlockMenuHandle: React.FC<BlockMenuHandleProps> = ({
   style,
 }) => {
   const { openMenu } = useBlockMenu()
+  const { setActivatorNodeRef, listeners, attributes } = useDragHandle()
   const [isHovered, setIsHovered] = React.useState(false)
 
-  const handleClick = (e: React.MouseEvent) => {
+  const handleContextMenu = (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
     openMenu(blockPath)
@@ -51,13 +53,16 @@ export const BlockMenuHandle: React.FC<BlockMenuHandleProps> = ({
 
   return (
     <div
+      ref={setActivatorNodeRef}
       className={className}
       style={combinedStyle}
-      onMouseDown={handleClick}
+      onContextMenu={handleContextMenu}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       contentEditable={false}
-      title="Click to open block menu"
+      title="Drag to reorder, right-click to open block menu"
+      {...listeners}
+      {...attributes}
     >
       <svg
         width="16"

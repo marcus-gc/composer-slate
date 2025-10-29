@@ -42,7 +42,7 @@ const defaultSeparatorStyle: React.CSSProperties = {
 export const DefaultBlockMenu: React.FC<DefaultBlockMenuProps> = ({ className = '', style }) => {
   const { isOpen, blockPath, closeMenu } = useBlockMenu()
   const composerContext = useComposer()
-  const { editor, plugins, convertBlock, duplicateBlock, deleteBlock } = composerContext
+  const { editor, plugins, convertBlock, duplicateBlock, deleteBlock, moveBlockUp, moveBlockDown } = composerContext
   const theme = useComposerTheme()
   const menuRef = useRef<HTMLDivElement>(null)
   const [position, setPosition] = React.useState<{ top: number; left: number } | null>(null)
@@ -85,6 +85,28 @@ export const DefaultBlockMenu: React.FC<DefaultBlockMenuProps> = ({ className = 
   const hasBlockStyling = useMemo(() => {
     return composerContext.setPadding !== undefined
   }, [composerContext])
+
+  // Check if we can move the block up or down
+  const canMoveUp = useMemo(() => {
+    if (!blockPath || !isOpen) return false
+    const lastIndex = blockPath[blockPath.length - 1]
+    return lastIndex > 0
+  }, [blockPath, isOpen])
+
+  const canMoveDown = useMemo(() => {
+    if (!blockPath || !isOpen) return false
+    try {
+      const parent = Node.parent(editor, blockPath)
+      const lastIndex = blockPath[blockPath.length - 1]
+      // Check if parent has children (works for both Element and Editor)
+      if (parent && 'children' in parent && Array.isArray(parent.children)) {
+        return lastIndex < parent.children.length - 1
+      }
+    } catch (e) {
+      return false
+    }
+    return false
+  }, [editor, blockPath, isOpen])
 
   // Get current block styles
   const currentBlockStyles = useMemo(() => {
@@ -156,6 +178,20 @@ export const DefaultBlockMenu: React.FC<DefaultBlockMenuProps> = ({ className = 
   const handleDelete = () => {
     deleteBlock(blockPath)
     closeMenu()
+  }
+
+  const handleMoveUp = () => {
+    if (moveBlockUp) {
+      moveBlockUp(blockPath)
+      closeMenu()
+    }
+  }
+
+  const handleMoveDown = () => {
+    if (moveBlockDown) {
+      moveBlockDown(blockPath)
+      closeMenu()
+    }
   }
 
   const handleStyleChange = (property: string, value: string) => {
@@ -407,6 +443,46 @@ export const DefaultBlockMenu: React.FC<DefaultBlockMenuProps> = ({ className = 
       )}
 
       {/* Actions section */}
+      {moveBlockUp && (
+        <div
+          style={{
+            ...defaultItemStyle,
+            ...(hoveredItem === 'moveUp' ? itemHoverStyle : {}),
+            opacity: canMoveUp ? 1 : 0.4,
+            cursor: canMoveUp ? 'pointer' : 'not-allowed',
+          }}
+          onMouseEnter={() => setHoveredItem('moveUp')}
+          onMouseLeave={() => setHoveredItem(null)}
+          onMouseDown={(e) => {
+            e.preventDefault()
+            if (canMoveUp) {
+              handleMoveUp()
+            }
+          }}
+        >
+          Move Up ↑
+        </div>
+      )}
+      {moveBlockDown && (
+        <div
+          style={{
+            ...defaultItemStyle,
+            ...(hoveredItem === 'moveDown' ? itemHoverStyle : {}),
+            opacity: canMoveDown ? 1 : 0.4,
+            cursor: canMoveDown ? 'pointer' : 'not-allowed',
+          }}
+          onMouseEnter={() => setHoveredItem('moveDown')}
+          onMouseLeave={() => setHoveredItem(null)}
+          onMouseDown={(e) => {
+            e.preventDefault()
+            if (canMoveDown) {
+              handleMoveDown()
+            }
+          }}
+        >
+          Move Down ↓
+        </div>
+      )}
       <div
         style={{
           ...defaultItemStyle,

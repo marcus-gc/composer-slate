@@ -126,3 +126,60 @@ export const deleteBlock = (editor: SlateEditor) => (path: Path) => {
     Transforms.removeNodes(editor, { at: path })
   }
 }
+
+/**
+ * Move a block up (swap with previous sibling)
+ */
+export const moveBlockUp = (editor: SlateEditor) => (path: Path) => {
+  const node = Node.get(editor, path)
+
+  if (!Element.isElement(node)) return
+
+  // Can't move up if we're at the first position
+  const lastIndex = path[path.length - 1]
+  if (lastIndex === 0) return
+
+  // Calculate the new path (one position up)
+  const newPath = [...path.slice(0, -1), lastIndex - 1]
+
+  // Move the node to the new position
+  Transforms.moveNodes(editor, {
+    at: path,
+    to: newPath,
+  })
+
+  // Keep focus on the moved block
+  ReactEditor.focus(editor as ReactEditor)
+}
+
+/**
+ * Move a block down (swap with next sibling)
+ */
+export const moveBlockDown = (editor: SlateEditor) => (path: Path) => {
+  const node = Node.get(editor, path)
+
+  if (!Element.isElement(node)) return
+
+  // Get parent to check if we're at the last position
+  const parent = Node.parent(editor, path)
+  const lastIndex = path[path.length - 1]
+
+  // Check if parent has children (works for both Element and Editor)
+  if (!parent || !('children' in parent) || !Array.isArray(parent.children)) return
+
+  // Can't move down if we're at the last position
+  if (lastIndex >= parent.children.length - 1) return
+
+  // Calculate the new path (one position down)
+  // moveNodes removes the node first, then inserts at target, so we use lastIndex + 1
+  const newPath = [...path.slice(0, -1), lastIndex + 1]
+
+  // Move the node to the new position
+  Transforms.moveNodes(editor, {
+    at: path,
+    to: newPath,
+  })
+
+  // Keep focus on the moved block
+  ReactEditor.focus(editor as ReactEditor)
+}
