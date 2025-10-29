@@ -13,7 +13,7 @@ import {
 } from '@dnd-kit/core'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { useComposer } from './ComposerContext'
-import { Path, Node, Element, Transforms } from 'slate'
+import { Path, Transforms } from 'slate'
 import { ReactEditor } from 'slate-react'
 
 interface DragAndDropContextValue {
@@ -106,7 +106,6 @@ export const DragAndDropProvider: React.FC<DragAndDropProviderProps> = ({ childr
       return
     }
 
-    const oldIndex = oldPath[oldPath.length - 1]
     const newIndex = newPath[newPath.length - 1]
 
     // Build the full path for the move

@@ -1,6 +1,6 @@
 {
   "name": "@givecampus/composer",
-  "version": "0.9.0",
+  "version": "0.10.1",
   "description": "A WYSIWYG text editor library based on Slate.js",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
