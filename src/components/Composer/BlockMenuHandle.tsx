@@ -37,7 +37,7 @@ export const BlockMenuHandle: React.FC<BlockMenuHandleProps> = ({
   const { openMenu } = useBlockMenu()
   const [isHovered, setIsHovered] = React.useState(false)
 
-  const handleClick = (e: React.MouseEvent) => {
+  const handleContextMenu = (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
     openMenu(blockPath)
@@ -53,11 +53,11 @@ export const BlockMenuHandle: React.FC<BlockMenuHandleProps> = ({
     <div
       className={className}
       style={combinedStyle}
-      onMouseDown={handleClick}
+      onContextMenu={handleContextMenu}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       contentEditable={false}
-      title="Click to open block menu"
+      title="Right-click to open block menu"
     >
       <svg
         width="16"

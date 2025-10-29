@@ -1,4 +1,5 @@
 import { RenderElementProps } from "slate-react"
+import { Path } from "slate"
 import { ElementDecoratorProps } from "../Composer/Root"
 
 const Paragraph = ({ attributes, children, element }: RenderElementProps) => {
@@ -13,6 +14,7 @@ const Paragraph = ({ attributes, children, element }: RenderElementProps) => {
 type ComposerElementProps = RenderElementProps & {
     availableElements: Record<string, { component: any; inline?: boolean; void?: boolean, showInBlockMenu?: boolean; hideBlockMenu?: boolean }>
     elementDecorators: Array<(props: ElementDecoratorProps) => React.ReactNode>
+    elementPath?: Path
 }
 
 const Element = ({
@@ -20,7 +22,8 @@ const Element = ({
     children,
     element,
     availableElements,
-    elementDecorators = []
+    elementDecorators = [],
+    elementPath
 }: ComposerElementProps) => {
     const elementConfig = availableElements[element.type]
     const ElementToRender = elementConfig?.component || Paragraph
@@ -34,6 +37,7 @@ const Element = ({
             attributes={attributes}
             children={children}
             element={element}
+            elementPath={elementPath}
             isInline={isInline}
             isVoid={isVoid}
             hideBlockMenu={hideBlockMenu}
