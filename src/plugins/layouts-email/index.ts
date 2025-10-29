@@ -18,7 +18,7 @@ import { Plugin } from '../../components/Composer/Root'
 import { elements } from './elements'
 
 // Reuse utilities from standard layouts plugin
-import { insertLayout } from '../layouts/utils'
+import { insertLayout, withLayouts } from '../layouts/utils'
 
 /**
  * Layout email plugin for Composer
@@ -33,6 +33,7 @@ export const layoutsEmail: Plugin = {
   utils: {
     insertLayout,
   },
+  withEditor: withLayouts,
 }
 
 // Export layout patterns and types for external use

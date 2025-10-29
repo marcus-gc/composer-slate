@@ -78,6 +78,9 @@ export const insertLayout = (editor: SlateEditor) => (options: InsertLayoutOptio
   } as any, { at: [editor.children.length] })
 }
 
+// Re-export withLayouts for use by layouts-email plugin
+export { withLayouts } from './withLayouts'
+
 export const utils = {
   insertLayout,
 }

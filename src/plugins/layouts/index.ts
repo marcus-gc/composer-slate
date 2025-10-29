@@ -9,12 +9,14 @@
 import { Plugin } from '../../components/Composer/Root'
 import { elements } from './elements'
 import { insertLayout } from './utils'
+import { withLayouts } from './withLayouts'
 
 export const layouts: Plugin = {
   elements,
   utils: {
     insertLayout,
   },
+  withEditor: withLayouts,
 }
 
 // Export layout patterns and types for external use
