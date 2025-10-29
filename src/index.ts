@@ -11,6 +11,7 @@ export { layouts } from './plugins/layouts'
 export { images } from './plugins/images'
 export { blockMenu } from './plugins/blockMenu'
 export { blockStyling } from './plugins/blockStyling'
+export { dragAndDrop } from './plugins/dragAndDrop'
 
 // Email plugins
 export { richTextEmail } from './plugins/richText-email'
