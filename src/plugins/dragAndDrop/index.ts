@@ -3,11 +3,11 @@
  *
  * Provides:
  * - **Provider**: DragAndDropProvider (manages drag state with dnd-kit)
- * - **ElementDecorator**: SortableWrapper (makes root-level blocks draggable)
+ * - **ElementDecorator**: SortableWrapper (makes blocks draggable)
  *
  * Features:
- * - Drag and drop to reorder blocks
- * - Only root-level blocks are draggable (layout children are protected)
+ * - Drag and drop to reorder blocks (root-level and within layout columns)
+ * - Same-parent validation (can only reorder within same container)
  * - Visual feedback during drag
  * - Mouse and touch support
  * - Activation constraint to prevent accidental drags
@@ -26,3 +26,4 @@ export const dragAndDrop: Plugin = {
 
 // Export utilities for external use
 export { pathToId, idToPath } from '../../context/DragAndDropContext'
+export { ColumnSortableContext } from './ColumnSortableContext'

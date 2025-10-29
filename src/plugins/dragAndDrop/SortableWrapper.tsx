@@ -30,13 +30,12 @@ export const SortableWrapper = ({
     return <>{children}</>
   }
 
-  // Only make root-level elements sortable (prevent layout children from being dragged)
-  if (elementPath.length !== 1) {
+  // Don't make layout containers or columns themselves draggable
+  if (element.type === 'layout-container' || element.type === 'layout-column') {
     return <>{children}</>
   }
 
-  // Check if this is a layout child - layouts have parent types
-  // For now, we'll just check path length (root level = draggable)
+  // Make all other blocks draggable (root-level and nested in columns)
   const id = pathToId(elementPath)
 
   const {

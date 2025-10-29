@@ -72,7 +72,7 @@ export const DragAndDropProvider: React.FC<DragAndDropProviderProps> = ({ childr
 
   const sensors = useSensors(mouseSensor, touchSensor)
 
-  // Get all root-level block IDs (only draggable items)
+  // Get all root-level block IDs (for root SortableContext)
   const items = editor.children.map((_, index) => pathToId([index]))
 
   const handleDragStart = (event: DragStartEvent) => {
@@ -95,18 +95,28 @@ export const DragAndDropProvider: React.FC<DragAndDropProviderProps> = ({ childr
     const oldPath = idToPath(active.id as string)
     const newPath = idToPath(over.id as string)
 
-    // Only allow root-level reordering (prevent dragging into layouts)
-    if (oldPath.length !== 1 || newPath.length !== 1) {
+    // Validate same-parent reordering
+    // Get parent paths (everything except last index)
+    const oldParentPath = oldPath.slice(0, -1)
+    const newParentPath = newPath.slice(0, -1)
+
+    // Check if they have the same parent
+    if (JSON.stringify(oldParentPath) !== JSON.stringify(newParentPath)) {
+      // Different parents - don't allow the move
       return
     }
 
-    const oldIndex = oldPath[0]
-    const newIndex = newPath[0]
+    const oldIndex = oldPath[oldPath.length - 1]
+    const newIndex = newPath[newPath.length - 1]
+
+    // Build the full path for the move
+    const moveFrom = oldPath
+    const moveTo = [...oldParentPath, newIndex]
 
     // Move the node
     Transforms.moveNodes(editor, {
-      at: [oldIndex],
-      to: [newIndex],
+      at: moveFrom,
+      to: moveTo,
     })
 
     // Keep focus on editor

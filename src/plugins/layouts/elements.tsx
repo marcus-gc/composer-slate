@@ -1,6 +1,7 @@
 import { RenderElementProps } from "slate-react"
 import { useComposerTheme } from '../../context/ThemeContext'
 import { isLayoutContainer } from '../../utils/typeGuards'
+import { ColumnSortableContext } from '../dragAndDrop/ColumnSortableContext'
 
 const LayoutContainer = ({ attributes, children, element }: RenderElementProps) => {
   // Use type guard for proper type safety
@@ -20,7 +21,7 @@ const LayoutContainer = ({ attributes, children, element }: RenderElementProps) 
   )
 }
 
-const LayoutColumn = ({ attributes, children }: RenderElementProps) => {
+const LayoutColumn = ({ attributes, children, element }: RenderElementProps) => {
   const theme = useComposerTheme()
 
   const style = {
@@ -32,7 +33,9 @@ const LayoutColumn = ({ attributes, children }: RenderElementProps) => {
 
   return (
     <div style={style} {...attributes}>
-      {children}
+      <ColumnSortableContext element={element}>
+        {children}
+      </ColumnSortableContext>
     </div>
   )
 }
