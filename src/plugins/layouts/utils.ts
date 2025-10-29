@@ -28,6 +28,9 @@ export const insertLayout = (editor: SlateEditor) => (columns: number = 2) => {
   } as any, { at: [editor.children.length] })
 }
 
+// Re-export withLayouts for use by layouts-email plugin
+export { withLayouts } from './withLayouts'
+
 export const utils = {
   insertLayout,
 }
