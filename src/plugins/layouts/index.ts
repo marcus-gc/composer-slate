@@ -4,7 +4,7 @@
  * Provides:
  * - **Elements**: layout-container, layout-column
  * - **Utils**: insertLayout
- * - **withEditor**: withLayouts (prevents layout structures from being copied/pasted)
+ * - **Patterns**: Predefined layout patterns (50/50, 33/33/33, etc.)
  */
 import { Plugin } from '../../components/Composer/Root'
 import { elements } from './elements'
@@ -18,3 +18,8 @@ export const layouts: Plugin = {
   },
   withEditor: withLayouts,
 }
+
+// Export layout patterns and types for external use
+export { LAYOUT_PATTERNS } from './layoutPatterns'
+export type { LayoutPattern } from './layoutPatterns'
+export type { InsertLayoutOptions } from './utils'

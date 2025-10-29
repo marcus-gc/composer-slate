@@ -65,11 +65,13 @@ export type ListItemElement = ElementStyles & BlockStyles & {
 export type LayoutContainerElement = ElementStyles & BlockStyles & {
   type: 'layout-container'
   columns?: number
+  columnWidths?: string[]  // e.g., ['1fr', '1fr'] or ['2fr', '1fr']
   children: LayoutColumnElement[]
 }
 
 export type LayoutColumnElement = ElementStyles & BlockStyles & {
   type: 'layout-column'
+  width?: string  // CSS width value like '1fr', '2fr', '50%'
   children: CustomElement[] | CustomText[]
 }
 
