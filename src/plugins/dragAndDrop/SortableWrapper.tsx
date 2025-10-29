@@ -30,8 +30,9 @@ export const SortableWrapper = ({
     return <>{children}</>
   }
 
-  // Don't make layout containers or columns themselves draggable
-  if (element.type === 'layout-container' || element.type === 'layout-column') {
+  // Don't make layout columns draggable (they're always children of containers)
+  // But layout containers ARE draggable (they're root-level blocks)
+  if (element.type === 'layout-column') {
     return <>{children}</>
   }
 

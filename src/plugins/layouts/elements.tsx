@@ -44,11 +44,11 @@ export const elements = {
   'layout-container': {
     component: LayoutContainer,
     showInBlockMenu: false, // Layouts are inserted via insertLayout utility, not converted
-    hideBlockMenu: true,
+    hideBlockMenu: false, // Show block menu so layout can be dragged/reordered
   },
   'layout-column': {
     component: LayoutColumn,
     showInBlockMenu: false, // Columns are part of layout containers, not standalone blocks
-    hideBlockMenu: true,
+    hideBlockMenu: true, // Columns should never have block menu (can't be dragged independently)
   },
 }
